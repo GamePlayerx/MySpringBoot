@@ -132,6 +132,28 @@ public class HelloController {
 
 ## 1-4-spring boot起步依赖原理分析
 
+我们在pom文件中按ctrl点击**spring-boot-starter-parent**
+![img_6.png](img_6.png)
+然后看到里面有个
+```xml
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-dependencies</artifactId>
+    <version>3.0.6</version>
+  </parent>
+```
+再按上面的操作点**spring-boot-dependencies**
+![img_7.png](img_7.png)
+看到有个**dependencyManagement**这边规定好了要引入什么依赖
+
+同理再看看**spring-boot-starter-web**
+![img_8.png](img_8.png)
+里面已经帮我们规定好了用**spring-web**什么版本，这也就是为什么我们没有引入tomcat，却能用的原因
+
+总结：
+* 在spring-boot-start-parent中定义了各种技术的版本信息，组合了一套最优搭配的技术版本。
+* 在各种starter中，定义了完成该功能需要的坐标集合，其中大部分版本信息来自与父工程。
+* 我们的工程继承parent，引入starter后，通过**依赖传递**，就可以简单获得需要的jar包，并且不会存在版本冲突等问题。
 
 # 2.配置文件
 
