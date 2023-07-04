@@ -158,24 +158,233 @@ public class HelloController {
 # 2.配置文件
 
 ## 2-1-spring boot配置文件-配置文件分类
+springboot是基于约定的，所以很多都有默认值，但如果想使用总结的配置替换默认配置的话，就
+可以使用application.properties或者application.yml(application.yaml)进行配置。
 
-
+1.默认配置文件名称：application      
+2.再同一级目录下有限集为properties > yml > yaml        
+例如：配置内置tomcat的端口        
+properties：
+```xml
+server.port=8080
+```
+yml:
+```java
+server:
+    port: 8080
+```
+init工程：     
+修改application.properties
+```java
+server.port=2023
+```
+新建application.yml
+```java
+server:
+    port: 8088
+```
+启动测试：
+![img_9.png](img_9.png)
+可以看到最后显示的端口是2023properties中配置的结果
 
 ## 2-2-spring boot配置文件-yml基本语法
 
+### 1、概念：
+yml是一种直观的能够被电脑识别的数据数据序列化格式，并且容易被人类阅读，容易和脚本语言交互的，
+可以被支持YML库的不同编程语言程序导入。       
 
+### 2、语法特点：
+* 大小写敏感
+* 数据值前边必须有空格，作为分隔符
+* 使用缩进表示层级关系
+* 缩进时不允许使用Tab键，只允许使用空格（各个系统Tab对应的空格数目可能不同，导致层次混乱）
+* 缩进的空格数目不重要，只要相同层级的元素左侧对齐即可
+* ‘#’表示注释，从这个字符一直到行尾，都会被解析器忽略
+```yaml
+server:
+  port: 2024
+  address: 127.0.0.1
+name: xcc
+```
 
 ## 2-3-spring boot配置文件-yml数据格式
-
-
+**对象(map)**：键值对的集合：
+```yaml
+person1:
+  name: hello
+# 行内写法
+person2： {name: world}
+```
+**数组**：一组按次序排列的值
+```yaml
+arry1:
+  - springboot
+  - springcloud
+# 行内写法：
+array2: [vue, react]
+```
+**纯量**：单个的、不可再分的值
+```yaml
+msg1: 'hello \n world'    # 单引号忽略转义字符
+msg2: "Hi \n springboot"  # 双引号识别转义符号
+```
+**参数引用**
+```yaml
+xcc: linux
+person:
+  name: ${xcc}            # 引用上边定义的xcc值
+```
 
 ## 2-4-spring boot配置文件-获取数据
 
+### 1、@value
+```java
+    // 获取普通配置
+    @Value("${name}")
+    private String name;
 
+    // 获取对象属性
+    @Value("${person1.name}")
+    private String name1;
+
+    // 获取数组
+    @Value("${array2[0]}")
+    private String array1;
+
+    // 获取纯量
+    @Value("${msg1}")
+    private String msg1;
+```
+### 2、Environment
+```java
+    @Autowired
+    private Environment env;
+    System.out.println("name1====="+env.getProperty("person1.name"));
+    System.out.println("array1====="+env.getProperty("array2[0]"));
+    System.out.println("msg1====="+env.getProperty("msg1"));
+    System.out.println("name====="+env.getProperty("name"));
+```
+
+### 3、@ConfigurationProperties
+**注意**：prefix一定要写
+创建一个实体类Person
+```java
+package com.hello.entity;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+
+@Component
+@ConfigurationProperties(prefix = "person")
+public class Person {
+    private String name;
+    private int age;
+    private String[] address;
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", address=" + Arrays.toString(address) +
+                '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String[] getAddress() {
+        return address;
+    }
+
+    public void setAddress(String[] address) {
+        this.address = address;
+    }
+}
+```
+![img_10.png](img_10.png)
+出现在这个不用慌。
+![img_11.png](img_11.png)
+要使用处理器，要有这个依赖。spring-boot-configuration-processor
+再maven上加上依赖就好了
+```xml
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+```
+HelloController类
+```java
+    @Autowired
+    Person person;
+    
+    System.out.println(person.toString());
+```
 
 ## 2-5-spring boot配置文件-profile-运维
 
+### 1、背景：profile是用来完成不同环境下，配置动态切换功能的
 
+### 2、profile配置方式
+多profile文件方式：提供多个配置文件，每个代表一种环境。主配置文件application.properties配置：
+> spring.profile.active=dev
+* application-dev.properties/yml  开发环境
+* application-test.properties/yml 测试环境
+* application-pro.properties/yml  生产环境
+ 
+yml多文档方式：       
+再yml中使用  --- 分隔不同配置
+```yaml
+---
+server:
+  port: 8081
+spring:
+  profiles: dev
+---
+server:
+  port: 8082
+spring:
+  profiles: test
+---
+server:
+  port: 8083
+spring:
+  profiles: pro
+---
+spring:
+  profiles:
+    active: pro
+```
+
+**开发时候主要用这种方式**：多profile文件方式
+
+### 3、profile激活方式
+* 配置文件：再配置文件种配置：spring.profiles.active=dev
+* 虚拟机参数：再VM options指定：-Dspring.profiles.active=pro
+* 命令行参数：--spring.profiles.active=test
+
+相当于上线时，运行jar包：java -jar xxx.jar --spring.profiles.active=pro        
+测试：使用maven打包此项目，再target包种出现xxx.jar      
+cmd 输入
+```java
+java -jar xxx.jar --spring.profiles.active=pro
+```
 
 ## 2-6-spring boot配置文件-项目内部配置文件加载顺序
 
