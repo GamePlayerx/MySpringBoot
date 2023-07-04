@@ -108,7 +108,27 @@ public class HelloController {
 
 ## 1-3-快速构建spring boot工厂
 
+使用Spring Initializr快速构建springboot项目     
 
+步骤如下：
+先选择你的Java版本号，项目名称等等
+![img_3.png](img_3.png)
+在选择依赖
+![img_4.png](img_4.png)
+接下来idea会自己下载依赖，下载完成可以看到，这边自动帮你创建好了主启动类
+![img_5.png](img_5.png)
+编写controller
+```java
+@RestController
+public class HelloController {
+
+    @GetMapping("/hello")
+    public String test() {
+        return "Hello SpringBoot";
+    }
+}
+```
+启动测试，访问：http://127.0.0.1:8080/hello
 
 ## 1-4-spring boot起步依赖原理分析
 
