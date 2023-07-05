@@ -421,7 +421,58 @@ https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#fea
 
 ## 3-1-springboot整合junit
 
+1、搭建springboot工程springboot-test。不引入依赖
 
+2、引入start-test起步依赖
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+```
+3、编写UserService
+```java
+package com.xcc.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+    public void add() {
+        System.out.println("Hello SpringBoot!");
+    }
+}
+```
+4、编写测试类UserServiceTest
+```java
+package com.xcc;
+
+import com.xcc.service.UserService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest(classes = SpringbootTestApplication.class) // 这是springboot测试类，容器就起来了
+public class UserServiceTest {
+
+    @Autowired
+    private UserService userService;
+
+    @Test
+    public void test() {
+        userService.add();
+    }
+
+}
+```
 
 ## 3-2-springboot整合mybatis
 
