@@ -10,6 +10,7 @@
         <module name="springboot-profile" />
         <module name="springboot-mybatis" />
         <module name="springboot-test" />
+        <module name="springboot-redis" />
         <module name="springboot-hello" />
       </profile>
     </annotationProcessing>
@@ -20,6 +21,7 @@
       <module name="springboot-hello" options="-parameters" />
       <module name="springboot-mybatis" options="-parameters" />
       <module name="springboot-profile" options="-parameters" />
+      <module name="springboot-redis" options="-parameters" />
       <module name="springboot-test" options="-parameters" />
     </option>
   </component>

@@ -662,4 +662,66 @@ public class PersonTest {
 ```
 ## 3-3-springboot整合redis
 
+1、搭建springboot工程springboot-redis
 
+2、引入redis依赖     
+如果不知道怎么找依赖的话，直接再这个官网 https://mvnrepository.com/ 上搜索
+```xml
+<dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+    </dependencies>
+```
+3、修改配置文件
+```yaml
+spring:
+  redis:
+    host: 127.0.0.1
+    prot: 6379
+```
+4、编写测试类
+```java
+package com.xcc.springbootredis;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
+
+@SpringBootTest
+public class RedisTest {
+
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @Test
+    public void test1() {
+        redisTemplate.opsForValue().set("a","Hello");
+
+        redisTemplate.boundValueOps("b").set("Redis");
+    }
+
+    @Test
+    public void test2() {
+        Object c = redisTemplate.opsForValue().get("a");
+        System.out.println(c);
+        Object d = redisTemplate.boundValueOps("b").get();
+        System.out.println(d);
+    }
+}
+```
