@@ -388,12 +388,34 @@ java -jar xxx.jar --spring.profiles.active=pro
 
 ## 2-6-spring boot配置文件-项目内部配置文件加载顺序
 
+加载顺序为下文的排序顺序，高优先级配置的属性会生效
+* file:./config/: 当前项目下的/config目录下
+* file:./ : 当前项目的根目录
+* classpath:/config/: classpath的/config目录
+* classpath:/ : classpath的根目录
 
+### 测试：
+新建springboot-config目录，分别再以上目录创建配置文件。    
+注意：
+1、项目根目录为springboot-test。  
+2、高级配置文件只覆盖低级配置文件的重复项。低级配置文件的独有项任然有效。最低级配置文件中添加：    
+> server.servlet.context-path = /test
+
+访问：http://127.0.0.1:8084/test/hello
 
 ## 2-7-spring boot配置文件-项目外部配置文件加载顺序
 
+外部配置文件的使用是为了不修改配置文件做的       
+### 1、命令行
+> java -jar xxx.jar --name="Spring" --server.port=8008
 
+### 2、指定配置文件位置
+> java -jar xxx.jar --spring.config.location=d://application.properties
 
+### 3、其他
+https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config
+
+作用：生产环境，随时改变环境变量时，可以通过改变配置文件来做。不需要重新打包项目。
 
 # 3.整合框架
 
