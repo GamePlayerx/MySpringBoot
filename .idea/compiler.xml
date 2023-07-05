@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="springboot-demo" />
         <module name="springboot-profile" />
+        <module name="springboot-mybatis" />
         <module name="springboot-test" />
         <module name="springboot-hello" />
       </profile>
@@ -17,6 +18,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="springboot-demo" options="-parameters" />
       <module name="springboot-hello" options="-parameters" />
+      <module name="springboot-mybatis" options="-parameters" />
       <module name="springboot-profile" options="-parameters" />
       <module name="springboot-test" options="-parameters" />
     </option>

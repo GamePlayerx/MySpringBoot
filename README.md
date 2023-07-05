@@ -476,8 +476,190 @@ public class UserServiceTest {
 
 ## 3-2-springboot整合mybatis
 
+1、搭建springboot工程springboot-mybatis
 
+2、引入mybatis起步依赖，添加mysql驱动
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.4</version>
+        </dependency>
+    </dependencies>
+```
+3、数据库创建张表
+```mysql
+CREATE TABLE `person` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `name` varchar(255) DEFAULT NULL COMMENT '姓名',
+  `age` int(11) DEFAULT NULL COMMENT '年龄',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+4、配置文件
+```yaml
+spring:
+  datasource:
+    #?serverTimezone=UTC解决时区的报错
+    url: jdbc:mysql://localhost:3306/mysql_demo?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+mybatis:
+  mapper-locations: classpath:mapper/*
+```
+5、实体类
+```java
+package com.xcc.springbootmybatis.entity;
+
+public class Person {
+    private Long id;
+    private String name;
+    private int age;
+
+    public Person() {}
+
+    public Person(Long id, String name, int age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+```
+6、DAO接口
+注解方式的
+```java
+package com.xcc.springbootmybatis.mapper;
+
+import com.xcc.springbootmybatis.entity.Person;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+@Mapper
+public interface PersonMapper {
+    @Select("select * from Person")
+    List<Person> list();
+}
+```
+使用XML方式的
+```java
+package com.xcc.springbootmybatis.mapper;
+
+import com.xcc.springbootmybatis.entity.Person;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
+@Mapper
+public interface PersonXMLMapper {
+    List<Person> list();
+}
+
+```
+7、xml文件
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xcc.springbootmybatis.mapper.PersonXMLMapper">
+
+    <select id="list" resultType="com.xcc.springbootmybatis.entity.Person">
+        select * from Person
+    </select>
+</mapper>
+```
+8、测试
+```java
+package com.xcc.springbootmybatis;
+
+import com.xcc.springbootmybatis.entity.Person;
+import com.xcc.springbootmybatis.mapper.PersonMapper;
+import com.xcc.springbootmybatis.mapper.PersonXMLMapper;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+
+@SpringBootTest
+public class PersonTest {
+
+    @Autowired
+    private PersonMapper personMapper;
+
+    @Autowired
+    private PersonXMLMapper personXMLMapper;
+
+    @Test
+    public void test() {
+        List<Person> list = personMapper.list();
+        System.out.println(list);
+    }
+
+    @Test
+    public void demo() {
+        List<Person> list = personXMLMapper.list();
+        System.out.println(list);
+    }
+
+}
+```
 ## 3-3-springboot整合redis
 
 
