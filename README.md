@@ -725,3 +725,307 @@ public class RedisTest {
     }
 }
 ```
+
+## 4、springboot自动配置
+
+### Condition
+Condition是spring4.0后引入的条件配置接口，通过实现Condition接口可以完成有条件的加载相应的Bean      
+@Condition要配和Condition的实现类(ClassCondition)进行使用  
+1、创建模块springboot-condition
+
+2、观察spring在自动创建bean过程   
+改造启动类
+```java
+@SpringBootApplication
+public class SpringbootConditionApplication {
+
+    public static void main(String[] args) {
+        // 返回spring容器
+        ConfigurableApplicationContext context = SpringApplication.run(SpringbootConditionApplication.class, args);
+
+        // 获取redisTemplate这个bean对象
+        Object redisTemplate = context.getBean("redisTemplate");
+        System.out.println(redisTemplate);
+
+    }
+
+}
+```
+启动：获取不到对象
+![img_12.png](img_12.png)
+加上redis的依赖
+```xml
+<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+```
+可以看到
+![img_13.png](img_13.png)
+只要引入依赖，就可以再spring的容器中获取对象
+
+创建一个实体类
+```java
+package com.xcc.springbootcondition.domain;
+
+public class User {
+}
+```
+再创建一个配置类
+```java
+package com.xcc.springbootcondition.config;
+
+import com.xcc.springbootcondition.domain.User;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+// 配置类
+@Configuration
+public class UserConfig {
+
+    @Bean
+    public User user() {
+        return new User();
+    }
+}
+```
+验证
+```java
+@SpringBootApplication
+public class SpringbootConditionApplication {
+    public static void main(String[] args) {
+        // 返回spring容器
+        ConfigurableApplicationContext context = SpringApplication.run(SpringbootConditionApplication.class, args);
+
+        // 获取redisTemplate这个bean对象
+//        Object redisTemplate = context.getBean("redisTemplate");
+//        System.out.println(redisTemplate);
+
+        // 通过名字拿bean对象
+//        User user = (User) context.getBean("user");
+//        System.out.println(user);
+
+        // 通过类型拿bean对象
+        User user = (User) context.getBean(User.class);
+        System.out.println(user);
+    }
+}
+```
+刚才我们写了一个配置类UserConfig，当我们启动springboot的时候会自动帮我们创建User对象。     
+
+但一般启动项目的时候就要创建某个对象，都要有个前置条件     
+举个例子：你的配置文件中要有下面这个；才能创建User对象
+```yaml
+ipAddress: localhost
+```
+可以利用springboot的
+![img_20.png](img_20.png)
+改造配置类UserConfig
+```java
+    @Bean
+    @ConditionalOnProperty(name = "ipAddress", havingValue="localhost")
+    public User user2() {
+        return new User();
+    }
+```
+主启动类打印
+```java
+ConfigurableApplicationContext context = SpringApplication.run(SpringbootConditionApplication.class, args);
+User user2 = (User) context.getBean("user2");
+System.out.println(user2);
+```
+然后启动就可以看到
+> com.xcc.springbootcondition.domain.User@4af7dd6a
+
+这是springboot自带的，我们也可以根据源码自己写个自己的    
+
+先看一下这边有很多个注解ConditionalOnBean,ConditionalOnClass等等。点进去看看
+![img_21.png](img_21.png)
+![img_22.png](img_22.png)
+我们可以看到这些注解都是有3个注解，Target，Retention，Documented   
+看看官网：https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.developing-auto-configuration
+* Target : 可以用在哪些地方
+* Retention : 什么时候起作用
+* Documented : 生成javadoc
+
+我们也按葫芦画瓢；写这个自己的注解
+创建自己的ConditionalOnClass注解
+```java
+package com.xcc.springbootcondition.condition;
+
+import org.springframework.context.annotation.Conditional;
+
+import java.lang.annotation.*;
+
+@Target({ElementType.TYPE, ElementType.METHOD})            
+@Retention(RetentionPolicy.RUNTIME)                         
+@Documented
+public @interface ConditionalOnClass {
+}
+```
+光有这些还不够，还要加上@Conditional,要有对应的类OnClassCondition，OnBeanCondition等等
+```java
+@Conditional(ClassCondition.class)
+```
+这里我们建个ClassCondition类
+```java
+public class ClassCondition{
+}
+```
+然后我们在看看源码**Conditional**干了什么事的
+![img_23.png](img_23.png)
+> Class<? extends Condition>[] value();
+
+这注解要继承一个**Condition**在改造一下我们创建的ClassCondition类
+```java
+public class ClassCondition implements Condition {
+    @Override
+    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        return false;
+    }
+}
+```
+分析：     
+我们建了一个类然后继承了ClassCondition类，还实现了matches这个方法，这个方法返回一个boolean。    
+就是说这边是可以加上我们自己写的逻辑，然后判断返回一个boolean从而决定某个bean对象是否生成。     
+我们的自己的注解在加上要传的参数就好了
+```java
+@Target({ElementType.TYPE, ElementType.METHOD})             
+@Retention(RetentionPolicy.RUNTIME)                         
+@Documented                                                 
+@Conditional(ClassCondition.class)
+public @interface ConditionalOnClass {
+    String[] value();       // 注解参数
+}
+```
+然后就是ClassCondition类添加逻辑
+```java
+public class ClassCondition implements Condition {
+    @Override
+    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        try {
+            Map<String, Object> map = metadata.getAnnotationAttributes("com.xcc.springbootcondition.condition.ConditionalOnClass");
+            System.out.println(map);
+
+            String [] values = (String[]) map.get("value");
+            for (String value : values) {
+                Class.forName(value);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}
+```
+配置类UserConfig
+```java
+@Configuration
+public class UserConfig {
+    @Bean
+    @ConditionalOnClass({"redis.clients.jedis.Jedis"})
+    public User user() {
+        return new User();
+    }
+}
+```
+### 切换内置web服务器
+我们创建springboot工程的时候引入了web，在启动的报文里会看到：
+> o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+
+springboot默认了端口和tomcat。我们的springboot需要引入spring-boot-starter-web，    
+我们就看看spring-boot-starter-web的里面：
+![img_24.png](img_24.png)
+里面引了tomcat，在点进去
+![img_25.png](img_25.png)
+这边已经引入的tomcat。
+在看看springboot的配置
+![img_26.png](img_26.png)
+这边EmbeddedWebServerFactoryCustomizerAutoConfiguration就是个配置里面看到了@ConditionalOnClass({ Tomcat.class, UpgradeProtocol.class })
+这个就是查项目有没有引入tomcat的，和刚才我们自己写的注解一样的道理。
+
+为什么springboot启动是默认用tomcat了，因为引入的依赖spring-boot-starter-web中就有tomcat，
+而spring-boot-autoconfigure中又检查项目有没有引入tomcat，引入就创建相应的bean
+
+要是想不用tomcat使用别的容器修改pom文件就好
+```xml
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jetty -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
+            <version>2.7.8</version>
+        </dependency>
+```
+在启动的报文中可以看见：
+![img_27.png](img_27.png)
+
+springboot工程，只要你引入了web依赖，就会自动加载spring-boot-autoconfigure。
+autoconfig工程里都有常用的配置类，只要工程中，引入了相关起步依赖，这些对象我们本项目的容器中就有了。
+
+### Enable
+springboot不能直接获取在其他工程中定义的Bean
+
+
+
+## 5、springboot自定义starter
+
+## 6、springboot事件监听
+
+## 7、springboot流程分析
+
+## 8、springboot监控
+
+## 9、springboot部署
+springboot的部署：
+* 打成jar包
+* 打成war包
+
+### jar包方式
+打开idea的maven这边，点击package
+![img_14.png](img_14.png)
+在target这边会有个jar包
+![img_15.png](img_15.png)
+不过你要是嫌名字太上可以再pom文件中起别名
+![img_16.png](img_16.png)
+还是打开idea的maven这边先clean清理一下，再package打包
+![img_17.png](img_17.png)
+target这边生成的jar包就是你再pom文件中起的名字了
+![img_18.png](img_18.png)
+
+### war包方式
+比较麻烦    
+要在pom文件中添加
+```xml
+<packaging>war</packaging>
+```
+修改主启动类
+```java
+@SpringBootApplication
+public class SpringbootConditionApplication extends SpringBootServletInitializer {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringbootConditionApplication.class, args);
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder build) {
+        return build;
+    }
+
+}
+```
+用上述的jar打包方式一样打包，在target中看到相应的war包
+![img_19.png](img_19.png)
