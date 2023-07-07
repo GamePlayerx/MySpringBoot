@@ -976,9 +976,130 @@ springboot工程，只要你引入了web依赖，就会自动加载spring-boot-a
 autoconfig工程里都有常用的配置类，只要工程中，引入了相关起步依赖，这些对象我们本项目的容器中就有了。
 
 ### Enable
+springboot虽然准备了很多常用的配置类，但是一般我们在实际开发中会引用别的类像：阿里云，七牛云等等；      
+举个例子：我们创建两个springboot工程，springboot-enable，springboot-enable-other
+![img_29.png](img_29.png)
+在springboot-enable-other中加个Person类
+```java
+package com.xcc.springbootenableother.demain;
+
+public class Person {
+}
+```
+再来个配置类PersonConfig
+```java
+package com.xcc.springbootenableother.config;
+
+import com.xcc.springbootenableother.demain.Person;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+// 配置类注解
+@Configuration
+public class PersonConfig {
+
+    @Bean
+    public Person person() {
+        return new Person();
+    }
+}
+```
+启动的时候bean中就会有Person这个对象。然后再springboot-enable的pom加上springboot-enable-other
+```xml
+        <dependency>
+            <groupId>com.xcc</groupId>
+            <artifactId>springboot-enable-other</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+```
+springboot-enable-other的主启动类改一下
+```java
+@SpringBootApplication
+public class SpringbootEnableApplication {
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(SpringbootEnableApplication.class, args);
+
+        Person perosn = (Person) context.getBean("person");
+        System.out.println(perosn);
+    }
+}
+```
+启动
+![img_30.png](img_30.png)
+可以看到No bean named 'person' available。容器中没有person这个对象。    
 springboot不能直接获取在其他工程中定义的Bean
+![img_28.png](img_28.png)
+主要是这三个注解，上面那几个是元注解
+* SpringBootConfiguration   // 自动配置相关
+* EnableAutoConfiguration   // 扫描应用程序中的所有组件，自动配置Spring需要的组件
+* ComponentScan             // 扫本包及子包，根据扫描的规则找出哪些需要自动装配到spring的bean容器中
 
+分析：之前的redis我们只要在pom文件那边引入依赖就可以在容器中获取了，是因为springboot常用的配置中就有的。系统启动才能在容器中获取。
+而刚才这个只是引入了，相应的配置类并没有，在springboot-enable中没，在根据上面的3个注解，其实就是缺配置。加配置也3种方法：
 
+1、扫描第三方jar包的配置类。
+```java
+@ComponentScan("com.xcc.springbootenableother.config")
+@SpringBootApplication
+public class SpringbootEnableApplication {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(SpringbootEnableApplication.class, args);
+
+        Person perosn = (Person) context.getBean("person");
+        System.out.println(perosn);
+    }
+
+}
+```
+2、把第三方配置类引进来。
+```java
+@Import(PersonConfig.class)
+@SpringBootApplication
+public class SpringbootEnableApplication {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(SpringbootEnableApplication.class, args);
+
+        Person perosn = (Person) context.getBean("person");
+        System.out.println(perosn);
+    }
+
+}
+```
+3、第三方注解封装好。     
+springboot-enable-other添加个注解类
+```java
+package com.xcc.springbootenableother.config;
+
+import org.springframework.context.annotation.Import;
+
+import java.lang.annotation.*;
+
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@Import(PersonConfig.class)
+public @interface EnablePerson {
+}
+```
+springboot-enable的主启动类加上写好的注解类@EnablePerson
+```java
+@EnablePerson
+@SpringBootApplication
+public class SpringbootEnableApplication {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(SpringbootEnableApplication.class, args);
+
+        Person perosn = (Person) context.getBean("person");
+        System.out.println(perosn);
+    }
+
+}
+```
+一般开发的时候用第三种方法，前面两个太麻烦了：一个你要知道配置类的全限名，一个你要知道配置类是啥
 
 ## 5、springboot自定义starter
 

@@ -10,6 +10,8 @@
         <module name="springboot-profile" />
         <module name="springboot-redis" />
         <module name="springboot-hello" />
+        <module name="springboot-enable-other" />
+        <module name="springboot-enable" />
         <module name="springboot-mybatis" />
         <module name="springboot-test" />
         <module name="springboot-condition" />
@@ -20,6 +22,8 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="springboot-condition" options="-parameters" />
       <module name="springboot-demo" options="-parameters" />
+      <module name="springboot-enable" options="-parameters" />
+      <module name="springboot-enable-other" options="-parameters" />
       <module name="springboot-hello" options="-parameters" />
       <module name="springboot-mybatis" options="-parameters" />
       <module name="springboot-profile" options="-parameters" />
