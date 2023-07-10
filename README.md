@@ -1101,6 +1101,87 @@ public class SpringbootEnableApplication {
 ```
 一般开发的时候用第三种方法，前面两个太麻烦了：一个你要知道配置类的全限名，一个你要知道配置类是啥
 
+### Import
+
+@Enable底层依赖与@Import注解导入一些类，使用@Import导入的类会被spring加载到IOC容器中：@Import提供了4种用法：
+
+1、导入Bean
+```java
+@Import(Person.class)
+```
+
+2、导入配置类
+```java
+@Import(PersonConfig.class)
+```
+
+3、导入ImportSelector实现类。一般用于加载配置文件中的类
+
+先创建自己的MyImportSelector类实现ImportSelector的selectImports
+```java
+public class MyImportSelector implements ImportSelector {
+    @Override
+    public String[] selectImports(AnnotationMetadata importingClassMetadata) {
+        return new String[]{"com.xcc.springbootenableother.demain.Person"};
+    }
+}
+```
+再主启动类添加注解
+```java
+@Import(MyImportSelector.class)
+```
+4、导入ImportBeanDefinitionRegistrar实现类
+
+先创建自己的MyImportBeanDefinitionRegistrar类实现ImportBeanDefinitionRegistrar
+```java
+public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
+
+    @Override
+    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
+                                        BeanDefinitionRegistry registry,
+                                        BeanNameGenerator importBeanNameGenerator) {
+        AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.
+                rootBeanDefinition(Person.class).getBeanDefinition();
+        registry.registerBeanDefinition("Person", beanDefinition);
+    }
+}
+```
+主启动类添加注解
+```java
+@Import(MyImportBeanDefinitionRegistrar.class)
+```
+获取方式
+```java
+        Map<String, Person> map = context.getBeansOfType(Person.class);
+        System.out.println(map);
+```
+
+### springboot自动配置-@EnableAutoConfiguration
+主启动类这边点进@SpringBootApplication
+![img_31.png](img_31.png)
+点进@EnableAutoConfiguration，看到了Import有个AutoConfigurationImportSelector类，就是刚才Import的第三种用法，springboot这边默认用的这种方式
+![img_32.png](img_32.png)
+在进去看到AutoConfigurationImportSelector实现了DeferredImportSelector
+![img_33.png](img_33.png)
+DeferredImportSelector中在看看这边是继承了ImportSelector
+![img_34.png](img_34.png)
+这也确定了EnableAutoConfiguration是靠import实现了自动配置，之前自己写的一个MyImportSelector类，中是实现了selectImports这个方法，
+那么在AutoConfigurationImportSelector是实现了DeferredImportSelector，DeferredImportSelector是继承了ImportSelector，
+所以AutoConfigurationImportSelector中有个方法和我之前的MyImportSelector干了同样的事。
+![img_35.png](img_35.png)
+> Assert.notEmpty(configurations,
+> "No auto configuration classes found in "
+> + "META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports. If you "
+> + "are using a custom packaging, make sure that file is correct.");
+
+通过这边的提示可以知道springboot的配置信息在META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
+
+![img_36.png](img_36.png)
+
+* @EnableAutoConfiguration注解内部使用@Import(AutoConfigurationImportSelector.class)来加载配置类。
+* 配置文件位置：META-INF/spring.factories,该配置文件中定义了大量的配置类，当springboot应用启动时，会自动加载这些配置类，初始化Bean
+* 并不是所有Bean都会被初始化，在配置类中使用Condition来加载满足条件的Bean
+
 ## 5、springboot自定义starter
 
 ## 6、springboot事件监听
