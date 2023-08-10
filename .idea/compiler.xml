@@ -13,13 +13,17 @@
         <module name="springboot-enable-other" />
         <module name="springboot-enable" />
         <module name="springboot-mybatis" />
+        <module name="redis-spring-boot-starter" />
         <module name="springboot-test" />
         <module name="springboot-condition" />
+        <module name="redis-spring-boot-autoconfigure" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="redis-spring-boot-autoconfigure" options="-parameters" />
+      <module name="redis-spring-boot-starter" options="-parameters" />
       <module name="springboot-condition" options="-parameters" />
       <module name="springboot-demo" options="-parameters" />
       <module name="springboot-enable" options="-parameters" />

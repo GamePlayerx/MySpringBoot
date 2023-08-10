@@ -1184,6 +1184,133 @@ DeferredImportSelector中在看看这边是继承了ImportSelector
 
 ## 5、springboot自定义starter
 
+我们可以模仿看到的方式，写个自己的starter。  
+例如：mybatis-spring-boot--starter,mybatis-spring-boot-autoconfigure   
+![img_37.png](img_37.png)  
+
+### 搭建项目
+redis-spring-boot-autoconfigure   
+![img_38.png](img_38.png)   
+pom.xml文件
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>redis.clients</groupId>
+        <artifactId>jedis</artifactId>
+        <version>4.4.3</version>
+    </dependency>
+</dependencies>
+```
+
+redis-spring-boot-starter
+![img_39.png](img_39.png)   
+pom.xml文件
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xcc</groupId>
+            <artifactId>redis-spring-boot-autoconfigure</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+```
+
+### 配置文件-RedisProperties
+```java
+@ConfigurationProperties(prefix = "redis")
+public class RedisProperties {
+
+    private String host = "localhost";
+    private int port = 6379;
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+}
+```
+
+### 配置文件-RedisAutoConfigure
+```java
+@Configuration
+@EnableConfigurationProperties(com.xcc.redisspringbootautoconfigure.config.RedisProperties.class)
+@ConditionalOnClass(Jedis.class)
+public class RedisAutoConfigure {
+    @Bean
+    public Jedis jedis(com.xcc.redisspringbootautoconfigure.config.RedisProperties redisProperties) {
+        return new Jedis(redisProperties.getHost(), redisProperties.getPort());
+    }
+}
+```
+
+### 配置文件-spring.factories
+```
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+package com.xcc.redisspringbootautoconfigure.config.RedisAutoConfigures
+```
+
+### 测试
+![img_41.png](img_41.png)   
+在pom.xml文件中添加
+```xml
+        <dependency>
+            <groupId>com.xcc</groupId>
+            <artifactId>redis-spring-boot-starter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+```
+启动本地的redis，事先添加个元素的     
+![img_42.png](img_42.png)
+
+```java
+@SpringBootApplication
+public class SpringbootTestApplication {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(SpringbootTestApplication.class, args);
+
+        Jedis jedis = (Jedis) context.getBean("jedis");
+        System.out.println(jedis);
+        String a = jedis.get("key1");
+        System.out.println(a);
+        String b = jedis.set("key2", "halo");
+        System.out.println(b);
+        String c = jedis.get("key2");
+        System.out.println(c);
+    }
+
+}
+```
+启动：     
+![img_43.png](img_43.png)       
+yml文件中添加个redis
+```yaml
+redis:
+  host: 11.152.11.23
+  port: 6379
+```
+![img_44.png](img_44.png)
+
 ## 6、springboot事件监听
 
 ## 7、springboot流程分析

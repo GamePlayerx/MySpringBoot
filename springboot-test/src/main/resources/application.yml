@@ -1,2 +1,7 @@
 server:
   port: 8082
+
+
+redis:
+  host: 11.152.11.23
+  port: 6379
