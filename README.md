@@ -1313,6 +1313,111 @@ redis:
 
 ## 6、springboot事件监听
 
+Java中的事件监听机制定义了以下几个角色：  
+1、事件：Event，继承java.util.EventObject类的对象  
+2、事件源：Source，任意对象Object     
+3、监听器：Listener，实现java.util.EventListener接口的对象       
+
+Springboot在项目启动时，会对几个监听器进行回调：   
+1、ApplicationRunner     
+创建ApplicationRunnerDemo类
+```java
+@Component
+public class ApplicationRunnerDemo implements ApplicationRunner {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        // 链接一下数据库，业务代码实现
+        System.out.println("ApplicationRunnerDemo run 程序启动了！");
+    }
+}
+```
+2、CommandLineRunner     
+创建CommandLineRunnerDemo类
+```java
+@Component
+public class CommandLineRunnerDemo implements CommandLineRunner {
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("CommandLineRunnerDemo run 程序启动了！");
+    }
+}
+```
+3、ApplicationContextInitializer     
+创建ApplicationContextInitializerDemo类
+```java
+public class ApplicationContextInitializerDemo implements ApplicationContextInitializer {
+    // 监听更早，可以做一些资源的检查，redis有没有启动等等
+    @Override
+    public void initialize(ConfigurableApplicationContext applicationContext) {
+        System.out.println("ApplicationContextInitializerDemo initialize ");
+    }
+}
+```
+还需要下resources创建META-INF/spring.factories
+```
+org.springframework.context.ApplicationContextInitializer=com.xcc.springbootlistener.listener.ApplicationContextInitializerDemo
+```
+4、SpringApplicationRunListener
+创建SpringApplicationRunListenerDemo类
+```java
+public class SpringApplicationRunListenerDemo implements SpringApplicationRunListener {
+
+    public SpringApplicationRunListenerDemo(SpringApplication application, String[] args) {}
+
+    @Override
+    public void starting(ConfigurableBootstrapContext bootstrapContext) {
+        SpringApplicationRunListener.super.starting(bootstrapContext);
+        System.out.println("SpringApplicationRunListenerDemo  starting ");
+    }
+
+    @Override
+    public void environmentPrepared(ConfigurableBootstrapContext bootstrapContext, ConfigurableEnvironment environment) {
+        SpringApplicationRunListener.super.environmentPrepared(bootstrapContext, environment);
+        System.out.println("SpringApplicationRunListenerDemo  environmentPrepared ");
+    }
+
+    @Override
+    public void contextPrepared(ConfigurableApplicationContext context) {
+        SpringApplicationRunListener.super.contextPrepared(context);
+        System.out.println("SpringApplicationRunListenerDemo  contextPrepared ");
+    }
+
+    @Override
+    public void contextLoaded(ConfigurableApplicationContext context) {
+        SpringApplicationRunListener.super.contextLoaded(context);
+        System.out.println("SpringApplicationRunListenerDemo  contextLoaded ");
+    }
+
+    @Override
+    public void started(ConfigurableApplicationContext context, Duration timeTaken) {
+        SpringApplicationRunListener.super.started(context, timeTaken);
+        System.out.println("SpringApplicationRunListenerDemo  started ");
+    }
+
+    @Override
+    public void ready(ConfigurableApplicationContext context, Duration timeTaken) {
+        SpringApplicationRunListener.super.ready(context, timeTaken);
+        System.out.println("SpringApplicationRunListenerDemo  ready ");
+    }
+
+    @Override
+    public void failed(ConfigurableApplicationContext context, Throwable exception) {
+        SpringApplicationRunListener.super.failed(context, exception);
+        System.out.println("SpringApplicationRunListenerDemo  failed ");
+    }
+}
+```
+还需要下resources创建META-INF/spring.factories
+```
+org.springframework.boot.SpringApplicationRunListener=com.xcc.springbootlistener.listener.SpringApplicationRunListenerDemo
+```
+
+### 总结
+
+1、ApplicationRunner和CommandLineRunner是程序启动晚后执行，可以做一些业务功能的处理   
+2、ApplicationContextInitializer是程序还没启动执行，可以做资源的检查；例如redis有没有启动，没启动程序就没必要启动    
+3、SpringApplicationRunListener功能全面，有程序启动前，后等等执行的，非常的全面
+
 ## 7、springboot流程分析
 
 ## 8、springboot监控

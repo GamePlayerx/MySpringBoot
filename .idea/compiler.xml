@@ -12,6 +12,7 @@
         <module name="springboot-hello" />
         <module name="springboot-enable-other" />
         <module name="springboot-enable" />
+        <module name="spring-boot-listener" />
         <module name="springboot-mybatis" />
         <module name="redis-spring-boot-starter" />
         <module name="springboot-test" />
@@ -24,6 +25,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="redis-spring-boot-autoconfigure" options="-parameters" />
       <module name="redis-spring-boot-starter" options="-parameters" />
+      <module name="spring-boot-listener" options="-parameters" />
       <module name="springboot-condition" options="-parameters" />
       <module name="springboot-demo" options="-parameters" />
       <module name="springboot-enable" options="-parameters" />
