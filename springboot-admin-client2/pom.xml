@@ -9,17 +9,22 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.xcc</groupId>
-    <artifactId>spring-boot-listener</artifactId>
+    <artifactId>springboot-admin-client2</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-boot-listener</name>
-    <description>spring-boot-listener</description>
+    <name>springboot-admin-client2</name>
+    <description>springboot-admin-client2</description>
     <properties>
         <java.version>17</java.version>
+        <spring-boot-admin.version>3.1.1</spring-boot-admin.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
         </dependency>
 
         <dependency>
@@ -27,12 +32,18 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-dependencies</artifactId>
+                <version>${spring-boot-admin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>

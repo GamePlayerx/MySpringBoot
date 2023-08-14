@@ -6,17 +6,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="springboot-demo" />
         <module name="springboot-profile" />
-        <module name="springboot-redis" />
-        <module name="springboot-hello" />
         <module name="springboot-enable-other" />
         <module name="springboot-enable" />
-        <module name="spring-boot-listener" />
-        <module name="springboot-mybatis" />
         <module name="redis-spring-boot-starter" />
         <module name="springboot-test" />
         <module name="springboot-condition" />
+        <module name="springboot-demo" />
+        <module name="springboot-redis" />
+        <module name="springboot-hello" />
+        <module name="springboot-admin-server" />
+        <module name="spring-boot-listener" />
+        <module name="springboot-mybatis" />
+        <module name="springboot-admin-client1" />
+        <module name="springboot-admin-client2" />
         <module name="redis-spring-boot-autoconfigure" />
       </profile>
     </annotationProcessing>
@@ -26,6 +29,9 @@
       <module name="redis-spring-boot-autoconfigure" options="-parameters" />
       <module name="redis-spring-boot-starter" options="-parameters" />
       <module name="spring-boot-listener" options="-parameters" />
+      <module name="springboot-admin-client1" options="-parameters" />
+      <module name="springboot-admin-client2" options="-parameters" />
+      <module name="springboot-admin-server" options="-parameters" />
       <module name="springboot-condition" options="-parameters" />
       <module name="springboot-demo" options="-parameters" />
       <module name="springboot-enable" options="-parameters" />

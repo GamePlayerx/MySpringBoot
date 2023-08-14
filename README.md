@@ -1353,7 +1353,7 @@ public class ApplicationContextInitializerDemo implements ApplicationContextInit
     }
 }
 ```
-还需要下resources创建META-INF/spring.factories
+还需要在resources下创建META-INF/spring.factories
 ```
 org.springframework.context.ApplicationContextInitializer=com.xcc.springbootlistener.listener.ApplicationContextInitializerDemo
 ```
@@ -1407,7 +1407,7 @@ public class SpringApplicationRunListenerDemo implements SpringApplicationRunLis
     }
 }
 ```
-还需要下resources创建META-INF/spring.factories
+还需要在resources下创建META-INF/spring.factories
 ```
 org.springframework.boot.SpringApplicationRunListener=com.xcc.springbootlistener.listener.SpringApplicationRunListenerDemo
 ```
@@ -1419,8 +1419,269 @@ org.springframework.boot.SpringApplicationRunListener=com.xcc.springbootlistener
 3、SpringApplicationRunListener功能全面，有程序启动前，后等等执行的，非常的全面
 
 ## 7、springboot流程分析
-
+![springbootStart.png](springbootStart.png)
 ## 8、springboot监控
+
+在pom文件添加jar
+```xml
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+```
+
+配置文件添加
+```properties
+management.endpoint.health.show-details=always
+management.endpoints.web.exposure.include=*
+```
+访问localhost:8080/actuator       
+![img_45.png](img_45.png)
+
+现在有两个客户端，我想对两个客户端监控
+
+#### 客户端1：springboot-admin-client1       
+controller
+```java
+@RestController
+public class helloController {
+
+    @GetMapping("/hello")
+    public String hello () {
+        return "Hello";
+    }
+}
+```
+application.properties修改
+```properties
+server.port=8081
+spring.boot.admin.client.url=http://localhost:9000
+
+management.endpoint.health.show-details=always
+management.endpoints.web.exposure.include=*
+```
+pom文件
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.xcc</groupId>
+    <artifactId>springboot-admin-client1</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>springboot-admin-client1</name>
+    <description>springboot-admin-client1</description>
+    <properties>
+        <java.version>17</java.version>
+        <spring-boot-admin.version>3.1.1</spring-boot-admin.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-dependencies</artifactId>
+                <version>${spring-boot-admin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+启动      
+![img_46.png](img_46.png)
+
+#### 客户端2：springboot-admin-client2
+controller
+```java
+@RestController
+public class haloController {
+
+    @GetMapping("/halo")
+    public String halo() {
+        return "Halo";
+    }
+}
+```
+application.properties
+```properties
+server.port=8082
+spring.boot.admin.client.url=http://localhost:9000
+
+management.endpoint.health.show-details=always
+management.endpoints.web.exposure.include=*
+```
+pom文件
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.xcc</groupId>
+    <artifactId>springboot-admin-client2</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>springboot-admin-client2</name>
+    <description>springboot-admin-client2</description>
+    <properties>
+        <java.version>17</java.version>
+        <spring-boot-admin.version>3.1.1</spring-boot-admin.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-dependencies</artifactId>
+                <version>${spring-boot-admin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+启动      
+![img_47.png](img_47.png)
+
+### 服务端：spring-boot-admin-server 负责监控前面两个客服端
+
+application.properties
+```properties
+server.port=9000
+```
+pom文件
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.xcc</groupId>
+    <artifactId>springboot-admin-server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>springboot-admin-server</name>
+    <description>springboot-admin-server</description>
+    <properties>
+        <java.version>17</java.version>
+        <spring-boot-admin.version>3.1.1</spring-boot-admin.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-dependencies</artifactId>
+                <version>${spring-boot-admin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+```
+主启动类
+```java
+@SpringBootApplication
+@EnableAdminServer
+public class SpringbootAdminServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringbootAdminServerApplication.class, args);
+    }
+
+}
+```
+启动访问：localhost:9000         
+![img_48.png](img_48.png)
 
 ## 9、springboot部署
 springboot的部署：
