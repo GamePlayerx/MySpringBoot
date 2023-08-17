@@ -1724,3 +1724,156 @@ public class SpringbootConditionApplication extends SpringBootServletInitializer
 ```
 用上述的jar打包方式一样打包，在target中看到相应的war包
 ![img_19.png](img_19.png)
+
+## 10、整合mybatis-plus
+
+mybatis-plus可以理解为mybatis的升级版，就好比显卡：RTX3060 < RTX3060Ti, RTX3070 < RTX3070Ti
+
+### 1、数据库信息
+
+```mysql
+CREATE TABLE `user` (
+  `id` bigint NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `age` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+```
+
+### 2、pom文件
+添加相应的依赖    
+```xml
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.15</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+```
+### 3、配置文件
+application.yml文件
+```yml
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mysql_test?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: 自己的账号
+    password: 自己的密码
+
+mybatis-plus:
+  #  mapper-locations: classpath:mapper/*.xml
+  mapper-locations: classpath:mapper/*.xml
+
+```
+
+### 4、基础类
+entity
+```java
+@Data
+@TableName("user")
+public class UserInfo {
+    @TableField("id")
+    private Long Id;
+    @TableField("name")
+    private String names;
+    @TableField("age")
+    private Integer ageIng;
+    @TableField("email")
+    private String Email;
+}
+
+```
+
+dao
+
+```java
+@Mapper
+public interface UserInfoMapper extends BaseMapper<UserInfo> {
+}
+
+```
+
+mapper
+
+```java
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xcc.springbootmybatisplus.dao.UserInfoMapper">
+
+</mapper>
+```
+
+service
+
+```java
+public interface UserInfoService extends IService<UserInfo> {
+}
+```
+
+impl
+
+```java
+@Service
+public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
+}
+```
+
+### 5、测试
+
+```java
+@SpringBootTest
+class SpringbootMybatisPlusApplicationTests {
+
+    @Autowired
+    private UserInfoService userInfoService;
+
+    @Test
+    void test() {
+        UserInfo userInfo = userInfoService.getById(1);
+        System.out.println(userInfo);
+    }
+
+}
+```
+![img_49.png](img_49.png)
+
+### 6、Mybatis-X自动生成代码
+
+idea需要安装Mybatis-X      
+安装方式，打开idea ->  file  -> settings -> plugins;然后搜索myabtis，找到MyBatisX，Install
+![img_50.png](img_50.png)
+
+打开idea的Database，连接mysql，找到自己要生成代码的table
+
+![img_53.png](img_53.png)
+
+![img_51.png](img_51.png)
+next下一步      
+![img_52.png](img_52.png)
+点击Finish完成，代码就生成好了。
+
+> 注意：mybatis-plus和springboot的版本有冲突，springboot不要使用3.xx的版本
+

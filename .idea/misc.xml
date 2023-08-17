@@ -22,6 +22,7 @@
         <option value="$PROJECT_DIR$/springboot-admin-server/pom.xml" />
         <option value="$PROJECT_DIR$/springboot-admin-client1/pom.xml" />
         <option value="$PROJECT_DIR$/springboot-admin-client2/pom.xml" />
+        <option value="$PROJECT_DIR$/springboot-mybatis-plus/pom.xml" />
       </list>
     </option>
   </component>

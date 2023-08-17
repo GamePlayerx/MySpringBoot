@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xcc.springbootmybatisplus.mapper.StudentInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.xcc.springbootmybatisplus.entity.StudentInfo">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="studentName" column="student_name" jdbcType="VARCHAR"/>
+            <result property="studentDay" column="student_day" jdbcType="VARCHAR"/>
+            <result property="studentMail" column="student_mail" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,student_name,student_day,
+        student_mail
+    </sql>
+</mapper>
