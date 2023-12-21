@@ -1877,3 +1877,157 @@ next下一步
 
 > 注意：mybatis-plus和springboot的版本有冲突，springboot不要使用3.xx的版本
 
+### 7、相关的增删改查
+
+普通的查询
+
+```java
+@Test
+    void contextLoads() {
+        UserInfo u = userInfoMapper.selectById(1);
+        System.out.println(u);
+    }
+```
+基础查询的条件
+QueryWrapper指定从查询条件
+```
+eq() 等于 =
+ne() 不等于 <>
+gt() 大于 >
+ge() 大于等于 >=
+lt() 小于 <
+le() 小于等于 <=
+between()  between 值1 and 值2
+notbwtween() not between 值1 and 值2
+in() in
+notIn() not in
+set() 修改中的set里面放要修改的内容
+or() 或
+```
+
+条件查询方式1
+```java
+    @Test
+    void selectTest() {
+        QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name", "aaa")
+                .gt("age", "2")
+                .lt("age", "8");
+
+        List<UserInfo> userInfos = userInfoMapper.selectList(queryWrapper);
+        System.out.println(userInfos);
+    }
+```
+
+条件查询方式2
+```java
+    @Test
+    void selectTest2() {
+        LambdaQueryWrapper<UserInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(UserInfo::getNames, "aaa")
+                .gt(UserInfo::getAgeIng, "2")
+                .lt(UserInfo::getAgeIng, "8");
+
+        List<UserInfo> userInfos = userInfoMapper.selectList(lambdaQueryWrapper);
+        System.out.println(userInfos);
+    }
+```
+
+模糊查询
+```java
+    @Test
+    void selectTest3() {
+        LambdaQueryWrapper<UserInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(UserInfo::getNames, "aaa")
+        .like(UserInfo::getEmail, "1")
+        .gt(UserInfo::getAgeIng, "2")
+        .lt(UserInfo::getAgeIng, "8");
+
+        List<UserInfo> userInfos = userInfoMapper.selectList(lambdaQueryWrapper);
+        System.out.println(userInfos);
+    }
+```
+
+分页查询
+```java
+    @Test
+    void PageTest() {
+        Long current = 1L;
+        Long size = 10L;
+        LambdaQueryWrapper<UserInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(UserInfo::getNames, "aaa")
+        .gt(UserInfo::getAgeIng, "2")
+        .lt(UserInfo::getAgeIng, "8");
+        
+        IPage<UserInfo> page = new Page<>(current, size);
+        userInfoMapper.selectPage(page, lambdaQueryWrapper);
+
+        List<UserInfo> records = page.getRecords();
+        System.out.println(records);
+        long total = page.getTotal();
+        System.out.println(total);
+        long pages = page.getPages();
+        System.out.println(pages);
+    }
+```
+
+添加
+```java
+    @Test
+    void addTest() {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setEmail("123");
+        userInfo.setNames("aaa");
+        userInfo.setAgeIng(1);
+
+        for (int i = 0; i < 30; i++)
+            userInfoMapper.insert(userInfo);
+    }
+```
+
+修改方式1
+```java
+    @Test
+    void updateTest1() {
+            LambdaUpdateWrapper<UserInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(UserInfo::getNames, "aaa")
+        .set(UserInfo::getAgeIng, "2")
+        .set(UserInfo::getNames, "bbb");
+
+        int i = userInfoMapper.update(null,lambdaUpdateWrapper);
+        System.out.println(i);
+}
+```
+
+修改方式2
+```java
+    @Test
+    void updateTest2() {
+        LambdaUpdateWrapper<UserInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(UserInfo::getNames, "aaa");
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setAgeIng(2);
+        userInfo.setNames("bbb");
+        int i = userInfoMapper.update(null,lambdaUpdateWrapper);
+        System.out.println(i);
+    }
+```
+
+根据主键删除
+```java
+   @Test
+    void delete1() {
+        int i = userInfoMapper.deleteById(1);
+    }
+```
+
+根据条件删除
+```java
+    @Test
+    void delete2() {
+        LambdaQueryWrapper<UserInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(UserInfo::getNames, "aaa");
+        int i = userInfoMapper.delete(lambdaQueryWrapper);
+    }
+```
