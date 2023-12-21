@@ -16,7 +16,7 @@
 springboot提供了一种快速使用spring的方式，基于**约定优与配置**的思想，可以让开发人员不必在配置上
 与逻辑业务之间进行思维的切换，全身心的投入到逻辑业务的代码编写中，从而大大提高了开发的效率。
 这是官网地址[springboot](https://spring.io/projects/spring-boot)
-![img.png](img.png)
+![pngs/img.png](pngs/img.png)
 
 ### springboot功能
 * 1、自动配置   
@@ -93,9 +93,9 @@ public class HelloController {
 ```
 
 5、启动测试
-![img_1.png](img_1.png)
+![pngs/img_1.png](pngs/img_1.png)
 看到Started项目启动成功，打开浏览器输入127.0.0.1:8080/hello/test看到
-![img_2.png](img_2.png)
+![pngs/img_2.png](pngs/img_2.png)
 
 ### 总结
 启动springboot一个web工程：    
@@ -112,11 +112,11 @@ public class HelloController {
 
 步骤如下：
 先选择你的Java版本号，项目名称等等
-![img_3.png](img_3.png)
+![pngs/img_3.png](pngs/img_3.png)
 在选择依赖
-![img_4.png](img_4.png)
+![pngs/img_4.png](pngs/img_4.png)
 接下来idea会自己下载依赖，下载完成可以看到，这边自动帮你创建好了主启动类
-![img_5.png](img_5.png)
+![pngs/img_5.png](pngs/img_5.png)
 编写controller
 ```java
 @RestController
@@ -133,7 +133,7 @@ public class HelloController {
 ## 1-4-spring boot起步依赖原理分析
 
 我们在pom文件中按ctrl点击**spring-boot-starter-parent**
-![img_6.png](img_6.png)
+![pngs/img_6.png](pngs/img_6.png)
 然后看到里面有个
 ```xml
 <parent>
@@ -143,11 +143,11 @@ public class HelloController {
   </parent>
 ```
 再按上面的操作点**spring-boot-dependencies**
-![img_7.png](img_7.png)
+![pngs/img_7.png](pngs/img_7.png)
 看到有个**dependencyManagement**这边规定好了要引入什么依赖
 
 同理再看看**spring-boot-starter-web**
-![img_8.png](img_8.png)
+![pngs/img_8.png](pngs/img_8.png)
 里面已经帮我们规定好了用**spring-web**什么版本，这也就是为什么我们没有引入tomcat，却能用的原因
 
 总结：
@@ -184,7 +184,7 @@ server:
     port: 8088
 ```
 启动测试：
-![img_9.png](img_9.png)
+![pngs/img_9.png](pngs/img_9.png)
 可以看到最后显示的端口是2023properties中配置的结果
 
 ## 2-2-spring boot配置文件-yml基本语法
@@ -317,9 +317,9 @@ public class Person {
     }
 }
 ```
-![img_10.png](img_10.png)
+![pngs/img_10.png](pngs/img_10.png)
 出现在这个不用慌。
-![img_11.png](img_11.png)
+![pngs/img_11.png](pngs/img_11.png)
 要使用处理器，要有这个依赖。spring-boot-configuration-processor
 再maven上加上依赖就好了
 ```xml
@@ -752,7 +752,7 @@ public class SpringbootConditionApplication {
 }
 ```
 启动：获取不到对象
-![img_12.png](img_12.png)
+![pngs/img_12.png](pngs/img_12.png)
 加上redis的依赖
 ```xml
 <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
@@ -763,7 +763,7 @@ public class SpringbootConditionApplication {
         </dependency>
 ```
 可以看到
-![img_13.png](img_13.png)
+![pngs/img_13.png](pngs/img_13.png)
 只要引入依赖，就可以再spring的容器中获取对象
 
 创建一个实体类
@@ -821,7 +821,7 @@ public class SpringbootConditionApplication {
 ipAddress: localhost
 ```
 可以利用springboot的
-![img_20.png](img_20.png)
+![pngs/img_20.png](pngs/img_20.png)
 改造配置类UserConfig
 ```java
     @Bean
@@ -842,8 +842,8 @@ System.out.println(user2);
 这是springboot自带的，我们也可以根据源码自己写个自己的    
 
 先看一下这边有很多个注解ConditionalOnBean,ConditionalOnClass等等。点进去看看
-![img_21.png](img_21.png)
-![img_22.png](img_22.png)
+![pngs/img_21.png](pngs/img_21.png)
+![pngs/img_22.png](pngs/img_22.png)
 我们可以看到这些注解都是有3个注解，Target，Retention，Documented   
 看看官网：https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.developing-auto-configuration
 * Target : 可以用在哪些地方
@@ -875,7 +875,7 @@ public class ClassCondition{
 }
 ```
 然后我们在看看源码**Conditional**干了什么事的
-![img_23.png](img_23.png)
+![pngs/img_23.png](pngs/img_23.png)
 > Class<? extends Condition>[] value();
 
 这注解要继承一个**Condition**在改造一下我们创建的ClassCondition类
@@ -937,12 +937,12 @@ public class UserConfig {
 
 springboot默认了端口和tomcat。我们的springboot需要引入spring-boot-starter-web，    
 我们就看看spring-boot-starter-web的里面：
-![img_24.png](img_24.png)
+![pngs/img_24.png](pngs/img_24.png)
 里面引了tomcat，在点进去
-![img_25.png](img_25.png)
+![pngs/img_25.png](pngs/img_25.png)
 这边已经引入的tomcat。
 在看看springboot的配置
-![img_26.png](img_26.png)
+![pngs/img_26.png](pngs/img_26.png)
 这边EmbeddedWebServerFactoryCustomizerAutoConfiguration就是个配置里面看到了@ConditionalOnClass({ Tomcat.class, UpgradeProtocol.class })
 这个就是查项目有没有引入tomcat的，和刚才我们自己写的注解一样的道理。
 
@@ -970,7 +970,7 @@ springboot默认了端口和tomcat。我们的springboot需要引入spring-boot-
         </dependency>
 ```
 在启动的报文中可以看见：
-![img_27.png](img_27.png)
+![pngs/img_27.png](pngs/img_27.png)
 
 springboot工程，只要你引入了web依赖，就会自动加载spring-boot-autoconfigure。
 autoconfig工程里都有常用的配置类，只要工程中，引入了相关起步依赖，这些对象我们本项目的容器中就有了。
@@ -978,7 +978,7 @@ autoconfig工程里都有常用的配置类，只要工程中，引入了相关�
 ### Enable
 springboot虽然准备了很多常用的配置类，但是一般我们在实际开发中会引用别的类像：阿里云，七牛云等等；      
 举个例子：我们创建两个springboot工程，springboot-enable，springboot-enable-other
-![img_29.png](img_29.png)
+![pngs/img_29.png](pngs/img_29.png)
 在springboot-enable-other中加个Person类
 ```java
 package com.xcc.springbootenableother.demain;
@@ -1025,10 +1025,10 @@ public class SpringbootEnableApplication {
 }
 ```
 启动
-![img_30.png](img_30.png)
+![pngs/img_30.png](pngs/img_30.png)
 可以看到No bean named 'person' available。容器中没有person这个对象。    
 springboot不能直接获取在其他工程中定义的Bean
-![img_28.png](img_28.png)
+![pngs/img_28.png](pngs/img_28.png)
 主要是这三个注解，上面那几个是元注解
 * SpringBootConfiguration   // 自动配置相关
 * EnableAutoConfiguration   // 扫描应用程序中的所有组件，自动配置Spring需要的组件
@@ -1158,17 +1158,17 @@ public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
 
 ### springboot自动配置-@EnableAutoConfiguration
 主启动类这边点进@SpringBootApplication
-![img_31.png](img_31.png)
+![pngs/img_31.png](pngs/img_31.png)
 点进@EnableAutoConfiguration，看到了Import有个AutoConfigurationImportSelector类，就是刚才Import的第三种用法，springboot这边默认用的这种方式
-![img_32.png](img_32.png)
+![pngs/img_32.png](pngs/img_32.png)
 在进去看到AutoConfigurationImportSelector实现了DeferredImportSelector
-![img_33.png](img_33.png)
+![pngs/img_33.png](pngs/img_33.png)
 DeferredImportSelector中在看看这边是继承了ImportSelector
-![img_34.png](img_34.png)
+![pngs/img_34.png](pngs/img_34.png)
 这也确定了EnableAutoConfiguration是靠import实现了自动配置，之前自己写的一个MyImportSelector类，中是实现了selectImports这个方法，
 那么在AutoConfigurationImportSelector是实现了DeferredImportSelector，DeferredImportSelector是继承了ImportSelector，
 所以AutoConfigurationImportSelector中有个方法和我之前的MyImportSelector干了同样的事。
-![img_35.png](img_35.png)
+![pngs/img_35.png](pngs/img_35.png)
 > Assert.notEmpty(configurations,
 > "No auto configuration classes found in "
 > + "META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports. If you "
@@ -1176,7 +1176,7 @@ DeferredImportSelector中在看看这边是继承了ImportSelector
 
 通过这边的提示可以知道springboot的配置信息在META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
 
-![img_36.png](img_36.png)
+![pngs/img_36.png](pngs/img_36.png)
 
 * @EnableAutoConfiguration注解内部使用@Import(AutoConfigurationImportSelector.class)来加载配置类。
 * 配置文件位置：META-INF/spring.factories,该配置文件中定义了大量的配置类，当springboot应用启动时，会自动加载这些配置类，初始化Bean
@@ -1186,11 +1186,11 @@ DeferredImportSelector中在看看这边是继承了ImportSelector
 
 我们可以模仿看到的方式，写个自己的starter。  
 例如：mybatis-spring-boot--starter,mybatis-spring-boot-autoconfigure   
-![img_37.png](img_37.png)  
+![pngs/img_37.png](pngs/img_37.png)  
 
 ### 搭建项目
 redis-spring-boot-autoconfigure   
-![img_38.png](img_38.png)   
+![pngs/img_38.png](pngs/img_38.png)   
 pom.xml文件
 ```xml
 <dependencies>
@@ -1207,7 +1207,7 @@ pom.xml文件
 ```
 
 redis-spring-boot-starter
-![img_39.png](img_39.png)   
+![pngs/img_39.png](pngs/img_39.png)   
 pom.xml文件
 ```xml
     <dependencies>
@@ -1270,7 +1270,7 @@ package com.xcc.redisspringbootautoconfigure.config.RedisAutoConfigures
 ```
 
 ### 测试
-![img_41.png](img_41.png)   
+![pngs/img_41.png](pngs/img_41.png)   
 在pom.xml文件中添加
 ```xml
         <dependency>
@@ -1280,7 +1280,7 @@ package com.xcc.redisspringbootautoconfigure.config.RedisAutoConfigures
         </dependency>
 ```
 启动本地的redis，事先添加个元素的     
-![img_42.png](img_42.png)
+![pngs/img_42.png](pngs/img_42.png)
 
 ```java
 @SpringBootApplication
@@ -1302,14 +1302,14 @@ public class SpringbootTestApplication {
 }
 ```
 启动：     
-![img_43.png](img_43.png)       
+![pngs/img_43.png](pngs/img_43.png)       
 yml文件中添加个redis
 ```yaml
 redis:
   host: 11.152.11.23
   port: 6379
 ```
-![img_44.png](img_44.png)
+![pngs/img_44.png](pngs/img_44.png)
 
 ## 6、springboot事件监听
 
@@ -1436,7 +1436,7 @@ management.endpoint.health.show-details=always
 management.endpoints.web.exposure.include=*
 ```
 访问localhost:8080/actuator       
-![img_45.png](img_45.png)
+![pngs/img_45.png](pngs/img_45.png)
 
 现在有两个客户端，我想对两个客户端监控
 
@@ -1521,7 +1521,7 @@ pom文件
 </project>
 ```
 启动      
-![img_46.png](img_46.png)
+![pngs/img_46.png](pngs/img_46.png)
 
 #### 客户端2：springboot-admin-client2
 controller
@@ -1604,7 +1604,7 @@ pom文件
 </project>
 ```
 启动      
-![img_47.png](img_47.png)
+![pngs/img_47.png](pngs/img_47.png)
 
 ### 服务端：spring-boot-admin-server 负责监控前面两个客服端
 
@@ -1681,7 +1681,7 @@ public class SpringbootAdminServerApplication {
 }
 ```
 启动访问：localhost:9000         
-![img_48.png](img_48.png)
+![pngs/img_48.png](pngs/img_48.png)
 
 ## 9、springboot部署
 springboot的部署：
@@ -1690,15 +1690,15 @@ springboot的部署：
 
 ### jar包方式
 打开idea的maven这边，点击package
-![img_14.png](img_14.png)
+![pngs/img_14.png](pngs/img_14.png)
 在target这边会有个jar包
-![img_15.png](img_15.png)
+![pngs/img_15.png](pngs/img_15.png)
 不过你要是嫌名字太上可以再pom文件中起别名
-![img_16.png](img_16.png)
+![pngs/img_16.png](pngs/img_16.png)
 还是打开idea的maven这边先clean清理一下，再package打包
-![img_17.png](img_17.png)
+![pngs/img_17.png](pngs/img_17.png)
 target这边生成的jar包就是你再pom文件中起的名字了
-![img_18.png](img_18.png)
+![pngs/img_18.png](pngs/img_18.png)
 
 ### war包方式
 比较麻烦    
@@ -1723,7 +1723,7 @@ public class SpringbootConditionApplication extends SpringBootServletInitializer
 }
 ```
 用上述的jar打包方式一样打包，在target中看到相应的war包
-![img_19.png](img_19.png)
+![pngs/img_19.png](pngs/img_19.png)
 
 ## 10、整合mybatis-plus
 
@@ -1858,21 +1858,21 @@ class SpringbootMybatisPlusApplicationTests {
 
 }
 ```
-![img_49.png](img_49.png)
+![pngs/img_49.png](pngs/img_49.png)
 
 ### 6、Mybatis-X自动生成代码
 
 idea需要安装Mybatis-X      
 安装方式，打开idea ->  file  -> settings -> plugins;然后搜索myabtis，找到MyBatisX，Install
-![img_50.png](img_50.png)
+![pngs/img_50.png](pngs/img_50.png)
 
 打开idea的Database，连接mysql，找到自己要生成代码的table
 
-![img_53.png](img_53.png)
+![pngs/img_53.png](pngs/img_53.png)
 
-![img_51.png](img_51.png)
+![pngs/img_51.png](pngs/img_51.png)
 next下一步      
-![img_52.png](img_52.png)
+![pngs/img_52.png](pngs/img_52.png)
 点击Finish完成，代码就生成好了。
 
 > 注意：mybatis-plus和springboot的版本有冲突，springboot不要使用3.xx的版本

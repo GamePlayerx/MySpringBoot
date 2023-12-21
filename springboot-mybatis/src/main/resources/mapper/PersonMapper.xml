@@ -5,6 +5,14 @@
 <mapper namespace="com.xcc.springbootmybatis.mapper.PersonXMLMapper">
 
     <select id="list" resultType="com.xcc.springbootmybatis.entity.Person">
-        select * from Person
+        select * from person
     </select>
+
+    <insert id="add" parameterType="com.xcc.springbootmybatis.entity.Person" useGeneratedKeys="true" keyProperty="id">
+        insert into person (id, name, age) values (#{id}, #{name}, #{age})
+    </insert>
+
+    <update id="update" parameterType="com.xcc.springbootmybatis.entity.Person">
+        update person set name = #{name}, age = #{age} where id = #{id}
+    </update>
 </mapper>
