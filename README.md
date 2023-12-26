@@ -2660,7 +2660,146 @@ Set相关操作：
 结果：
 ![pngs/img_62.png](pngs/img_62.png)
 
+## 6、redis高级
 
+### Redis的持久化
+
+> 由于redis是一个内存数据库，所有的数据都是保存再内存当中的，内存当中的数据极易丢失，所有redis的数据持久化
+> 就显得尤为重要，再redis当中，提供了两种数据持久化的方式，分别为RDB以及AOF，且Redis默认开启的数据持久化方式是
+> RDB方式。
+
+RDB：
+![pngs/img_63.png](pngs/img_63.png)
+
+RDB的优点：
+![pngs/img_64.png](pngs/img_64.png)
+
+RDB的缺点：
+![pngs/img_65.png](pngs/img_65.png)
+
+修改redis的配置文件：<br>
+```
+cd /export/server/redis-6.2.6/
+vim redis.conf
+# 第 行
+save 900 1
+save 300 10
+save 60 10000
+save 5 1
+```
+
+重新启动redis服务<br>
+每次生成新的dump.rdb都会覆盖掉之前的老的快照<br>
+```
+ps -ef | grep redis
+bin/redis-cli -h ip地址 shutdown
+bin/redis-server redis.conf
+```
+
+AOF：<br>
+采用AOF持久方式时，Redis会把每一个写请求都记录在一个日志文件里。在Redis重启时，
+会把AOF文件中记录的所有写操作顺序执行一边，确保数据恢复到最新。
+
+开启AOF<br>
+AOF是默认关闭的，如果要开启，进行如下配置：<br>
+```
+# 第594行
+appendonly yes
+```
+
+配置AOF：<br>
+![pngs/img_66.png](pngs/img_66.png)
+
+AOF rewrite
+![pngs/img_67.png](pngs/img_67.png)
+
+AOF 优点
+![pngs/img_68.png](pngs/img_68.png)
+
+AOF 缺点
+![pngs/img_69.png](pngs/img_69.png)
+
+RDB和AOF对比
+![pngs/img_70.png](pngs/img_70.png)
+
+### Redis的事务
+
+> Redis事务的本质是一组命令的集合。事务支持一次执行多个命令，一个事务中所有命令都会被序列化。
+> 在事务执行过程，会按顺序串行化执行队列的命令，其他客户端提交的命令请求不会插入到事务执行命令序列中。
+> 总结：Redis事务就是一次性、顺序性、排他性的执行一个队列中的一系列命令
+
+![pngs/img_71.png](pngs/img_71.png)
+
+一个事务从开始到执行会经历以下三个阶段：<br
+1、开始事务<br>
+2、命令入队<br>
+3、执行事务<br>
+
+Redis事务相关命令：<br>
+```
+MULTI
+开启事务，redis会将后续的命令逐个放入队列中，然后使用EXEC命令来原子化执行这个命令队列
+
+EXEC
+执行事务中的所有操作命令
+
+DISCARD
+取消事务，放弃执行事务块中的所有命令
+
+WATCH
+监视一个或多个key，如果事务在执行前，这个key（或多个key）被其他命令修改，则事务被中断，不会执行事务中的任何命令
+
+UNWATCH
+取消WATCH对所有key的监视
+```
+
+事务的实例：<br>
+MULTI开始一个事务：给k1，k2分别赋值，在事务中修改k1，k2执行事务后，查看k1，k2值都被修改。
+```
+set key1 v1
+
+set key2 v2
+
+multi
+
+set key1 11
+
+set key2 22
+
+exec
+
+get key1
+
+get key2
+```
+
+取消事务
+```
+multi
+
+set key1 v1
+
+set key2 v2
+
+discard
+
+get key1
+
+get key2
+```
+
+为什么Redis不支持事务回滚
+![pngs/img_72.png](pngs/img_72.png)
+
+### Redis的主从复制架构
+
+
+
+### Redis的Sentine架构
+
+
+
+### Redis cluster集群架构
 
 
 
