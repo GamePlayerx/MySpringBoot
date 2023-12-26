@@ -2414,9 +2414,118 @@ Redis HyperLogLog 是用来做基数统计的算法，HyperLogLog 的优点是�
 |2	|PFCOUNT key [key ...] 返回给定 HyperLogLog 的基数提示值。|
 |3	|PFMERGE destkey sourcekey [sourcekey ...] 将多个 HyperLogLog 合并为一个 HyperLogLog|
 
+### 5、Java操作redis
 
+### 1、创建一个maven工程
+![pngs/img_58.png](pngs/img_58.png)
 
+### 2、pom文件修改
 
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.xcc</groupId>
+  <artifactId>redis-and-java</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <properties>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>2.9.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>7.4.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+```
+
+### 3、写测试类
+
+创建测试类ApiTest
+
+```java
+package com.xcc.redis;
+
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+
+/**
+ * @Author GamePlayer-Joker
+ * @Date 2023/12/26
+ */
+public class ApiTest {
+    
+    JedisPool jedisPool;
+    
+    // BeforeTest 这个注解是在Test启动前启动的，这里用于创建连接
+    // 注意这里要小心要用testing的import
+    @BeforeTest
+    public void beforeTest() {
+        // 创建jedis连接池
+        JedisPoolConfig config = new JedisPoolConfig();
+        // 最大空闲连接
+        config.setMaxIdle(10);
+        // 最小空闲连接
+        config.setMinIdle(5);
+        // 最大空闲时间 这里设置的4秒
+        config.setMaxWaitMillis(4000);
+        // 最大连接数
+        config.setMaxTotal(50);
+
+        // 这里连接的是本地的redis，默认端口号是6379
+        jedisPool = new JedisPool(config, "127.0.0.1", 6379);
+    }
+
+    // 测试前要启动本地的redis
+    @Test
+    public void testString() {
+        // 从池子中拿一个连接
+        Jedis jedis = jedisPool.getResource();
+        String name = jedis.get("myname");
+        System.out.println("name====="+name);
+    }
+    
+    // AfterTest注解是Test执行完之后执行的，这里用于断开连接
+    // 注意要用testing的import
+    @AfterTest
+    public void closeTest() {
+        jedisPool.close();
+    }
+
+}
+```
 
 
 

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/redis-and-java" />
     <file type="web" url="file://$PROJECT_DIR$/springboot-condition" />
   </component>
   <component name="MavenProjectsManager">
@@ -23,6 +24,7 @@
         <option value="$PROJECT_DIR$/springboot-admin-client1/pom.xml" />
         <option value="$PROJECT_DIR$/springboot-admin-client2/pom.xml" />
         <option value="$PROJECT_DIR$/springboot-mybatis-plus/pom.xml" />
+        <option value="$PROJECT_DIR$/redis-and-java/pom.xml" />
       </list>
     </option>
   </component>

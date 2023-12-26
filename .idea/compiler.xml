@@ -17,6 +17,7 @@
         <module name="springboot-demo" />
         <module name="springboot-redis" />
         <module name="springboot-hello" />
+        <module name="redis-and-java" />
         <module name="springboot-admin-server" />
         <module name="spring-boot-listener" />
         <module name="springboot-mybatis" />
