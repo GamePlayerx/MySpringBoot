@@ -2791,6 +2791,83 @@ get key2
 为什么Redis不支持事务回滚
 ![pngs/img_72.png](pngs/img_72.png)
 
+### 数据删除与淘汰策略
+
+Redis中的数据特征：
+![pngs/img_73.png](pngs/img_73.png)
+
+数据的时效在redis的存储如下图：
+![pngs/img_74.png](pngs/img_74.png)
+
+过期数据是一块独立的存储空间，Hash结构，field是内存地址，value是过期时间，保存了所有key的过期描述，在最终进行过期处理的时候<br>
+对该空间的数据进行检测，当时间到期之后通过field找到内存该地址处的数据，然后进行相关操作。
+
+数据删除策略<br>
+数据删除策略的目标：<br>
+在内容占用与CPU占用之间寻找一种平很，顾此都会造成整体redis性能的下降，引发服务器宕机或内存泄漏<br>
+
+主要删除策略有：<br>
+1. 定时删除<br>
+2. 惰性删除<br>
+3. 定期删除<br>
+
+定时删除:
+![pngs/img_75.png](pngs/img_75.png)
+![pngs/img_76.png](pngs/img_76.png)
+惰性删除:
+![pngs/img_77.png](pngs/img_77.png)
+![pngs/img_78.png](pngs/img_78.png)
+
+定期删除:
+![pngs/img_79.png](pngs/img_79.png)
+![pngs/img_80.png](pngs/img_80.png)
+总的来说：定期删除就是周期性轮询redis库中的时效性数据，采用随机抽取的策略，利用过期数据占比的方式控制删除频度。
+> 特点1：CPU性能占用设置有峰值，检测频度可自定义设置<br>
+> 特点2：内存压力不是很大，长期占用内存的冷数据会被持续清理<br>
+> 总结：周期性抽查存储空间（随机抽查，重点抽查）
+
+删除策略对比：
+
+1：定时删除：
+> 节省内存，不占用，<br>
+> 不分时段占用CPU资源，频度高，<br>
+> 拿时间换空间<br>
+
+2：惰性删除：
+> 内存占用严重<br>
+> 延时执行，CPU利用率高<br>
+> 拿空间换时间<br>
+
+3：定期删除：
+> 内存定期随机清理<br>
+> 每秒花费固定的CPU资源维护内存<br>
+> 随机抽取，重点抽取<br>
+
+数据淘汰策略（逐出算法）<br>
+
+![pngs/img_81.png](pngs/img_81.png)
+
+策略配置：
+![pngs/img_82.png](pngs/img_82.png)
+
+数据删除的策略policy一共是3类8种：
+
+**第一类**：检测易失数据（可能会过期的数据集server.db[i].expirs）
+> volatile-lru: 挑选最近最少使用的数据淘汰<br>
+> volatile-lfu: 挑选最近使用次数最少的数据淘汰<br>
+> volatile-ttl: 挑选将要过期的数据淘汰<br>
+> volatile-random: 任意选择数据淘汰<br>
+
+**第二类**: 检测全库数据（所有数据集server.db[i].dict）
+> allkeys-lru: 挑选最近最少使用的数据淘汰<br>
+> allkeLyRs-lfu: 挑选最近使用次数最少的数据淘汰<br>
+> allkeys-random: 任意选择数据淘汰，相当于随机<br>
+
+**第三类**: 放弃数据驱逐
+> no-enviction(驱逐): 禁止驱逐数据（redis4.0中默认策略），会引发OOM(Out Of Memory)
+
+
+
 ### Redis的主从复制架构
 
 
