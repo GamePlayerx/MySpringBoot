@@ -2852,11 +2852,15 @@ Redis中的数据特征：
 
 数据删除的策略policy一共是3类8种：
 
-**第一类**：检测易失数据（可能会过期的数据集server.db[i].expirs）
+**第一类**：检测易失数据（可能会过期的数据集server.db[i].expirs） 同一个库
 > volatile-lru: 挑选最近最少使用的数据淘汰<br>
+> ![pngs/img_83.png](pngs/img_83.png)
 > volatile-lfu: 挑选最近使用次数最少的数据淘汰<br>
+> ![pngs/img_84.png](pngs/img_84.png)
 > volatile-ttl: 挑选将要过期的数据淘汰<br>
+> ![pngs/img_85.png](pngs/img_85.png)
 > volatile-random: 任意选择数据淘汰<br>
+> ![pngs/img_86.png](pngs/img_86.png)
 
 **第二类**: 检测全库数据（所有数据集server.db[i].dict）
 > allkeys-lru: 挑选最近最少使用的数据淘汰<br>
@@ -2866,7 +2870,12 @@ Redis中的数据特征：
 **第三类**: 放弃数据驱逐
 > no-enviction(驱逐): 禁止驱逐数据（redis4.0中默认策略），会引发OOM(Out Of Memory)
 
+配置方法：
+> maxmemory-policy volatile-lru
 
+**数据淘汰策略配置依据**
+
+使用INFO命令输出监控信息，查询缓存hit和miss的次数，根据业务需求调优Redis配置。
 
 ### Redis的主从复制架构
 
