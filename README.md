@@ -15,21 +15,13 @@
 ### springboot概念
 springboot提供了一种快速使用spring的方式，基于**约定优与配置**的思想，可以让开发人员不必在配置上
 与逻辑业务之间进行思维的切换，全身心的投入到逻辑业务的代码编写中，从而大大提高了开发的效率。
-这是官网地址[springboot](https://spring.io/projects/spring-boot)
+这是官网地址[springboot](https://spring.io/projects/spring-boot)<br>
 ![pngs/img.png](pngs/img.png)
 
 ### springboot功能
-* 1、自动配置   
-springboot的自动配置是一个允许时（更准确地说，是应用程序启动时）的过程，考虑了众多因数，才决定
-spring配置应该用哪个，不该用哪个。该过程是springboot自动完成的
-
-* 2、起步依赖   
-起步依赖本质上是一个Maven项目对象模型（Project Object Model POM），定义了对其他库的
-**传递依赖**，这些东西加在一起即支持某项功能。**依赖太多**，**版本冲突**。
-
-简单的说，起步依赖就是将具备某种功能的坐标打包到一起，并提供一些默认的功能。
-* 3、辅助功能    
-提供了一些大项目中常见的非功能性特性：如嵌入式服务器（tomcat）、安全、指标、健康检测、外部配置等。
+* 1、自动配置 springboot的自动配置是一个允许时（更准确地说，是应用程序启动时）的过程，考虑了众多因数，才决定 spring配置应该用哪个，不该用哪个。该过程是springboot自动完成的
+* 2、起步依赖 起步依赖本质上是一个Maven项目对象模型（Project Object Model POM），定义了对其他库的**传递依赖**，这些东西加在一起即支持某项功能。**依赖太多**，**版本冲突**。 简单的说，起步依赖就是将具备某种功能的坐标打包到一起，并提供一些默认的功能。
+* 3、辅助功能提供了一些大项目中常见的非功能性特性：如嵌入式服务器（tomcat）、安全、指标、健康检测、外部配置等。
 
 **注意：SpringBoot并不是对Spring功能上的增强，而是提供了一种快速使用Spring的方式。**
 
@@ -92,16 +84,16 @@ public class HelloController {
 }
 ```
 
-5、启动测试
-![pngs/img_1.png](pngs/img_1.png)
-看到Started项目启动成功，打开浏览器输入127.0.0.1:8080/hello/test看到
+5、启动测试<br>
+![pngs/img_1.png](pngs/img_1.png)<br>
+看到Started项目启动成功，打开浏览器输入127.0.0.1:8080/hello/test看到<br>
 ![pngs/img_2.png](pngs/img_2.png)
 
 ### 总结
 启动springboot一个web工程：    
-1、pom规定父工程，导入web的起步依赖   
-2、主启动类@SpringBootApplication、main   
-3、业务逻辑controller、service、dao
+* 1、pom规定父工程，导入web的起步依赖   
+* 2、主启动类@SpringBootApplication、main   
+* 3、业务逻辑controller、service、dao
 * springboot在创建项目时，使用jar的打包方式。 java-jar xxx.jar
 * springboot的引导类，是项目入口，运行main方法就可以启动项目。
 * 使用springboot和spring构建的项目，业务代码编写方式完全一样。
@@ -110,13 +102,13 @@ public class HelloController {
 
 使用Spring Initializr快速构建springboot项目     
 
-步骤如下：
-先选择你的Java版本号，项目名称等等
-![pngs/img_3.png](pngs/img_3.png)
-在选择依赖
-![pngs/img_4.png](pngs/img_4.png)
-接下来idea会自己下载依赖，下载完成可以看到，这边自动帮你创建好了主启动类
-![pngs/img_5.png](pngs/img_5.png)
+步骤如下：<br>
+先选择你的Java版本号，项目名称等等<br>
+![pngs/img_3.png](pngs/img_3.png)<br>
+在选择依赖<br>
+![pngs/img_4.png](pngs/img_4.png)<br>
+接下来idea会自己下载依赖，下载完成可以看到，这边自动帮你创建好了主启动类<br>
+![pngs/img_5.png](pngs/img_5.png)<br>
 编写controller
 ```java
 @RestController
@@ -132,8 +124,8 @@ public class HelloController {
 
 ## 1-4-spring boot起步依赖原理分析
 
-我们在pom文件中按ctrl点击**spring-boot-starter-parent**
-![pngs/img_6.png](pngs/img_6.png)
+我们在pom文件中按ctrl点击**spring-boot-starter-parent**<br>
+![pngs/img_6.png](pngs/img_6.png)<br>
 然后看到里面有个
 ```xml
 <parent>
@@ -142,12 +134,12 @@ public class HelloController {
     <version>3.0.6</version>
   </parent>
 ```
-再按上面的操作点**spring-boot-dependencies**
-![pngs/img_7.png](pngs/img_7.png)
+再按上面的操作点**spring-boot-dependencies**<br>
+![pngs/img_7.png](pngs/img_7.png)<br>
 看到有个**dependencyManagement**这边规定好了要引入什么依赖
 
-同理再看看**spring-boot-starter-web**
-![pngs/img_8.png](pngs/img_8.png)
+同理再看看**spring-boot-starter-web**<br>
+![pngs/img_8.png](pngs/img_8.png)<br>
 里面已经帮我们规定好了用**spring-web**什么版本，这也就是为什么我们没有引入tomcat，却能用的原因
 
 总结：
@@ -183,9 +175,9 @@ server.port=2023
 server:
     port: 8088
 ```
-启动测试：
-![pngs/img_9.png](pngs/img_9.png)
-可以看到最后显示的端口是2023properties中配置的结果
+启动测试：<br>
+![pngs/img_9.png](pngs/img_9.png)<br>
+可以看到最后显示的端口是2023properties中配置的结果<br>
 
 ## 2-2-spring boot配置文件-yml基本语法
 
@@ -317,10 +309,10 @@ public class Person {
     }
 }
 ```
-![pngs/img_10.png](pngs/img_10.png)
-出现在这个不用慌。
-![pngs/img_11.png](pngs/img_11.png)
-要使用处理器，要有这个依赖。spring-boot-configuration-processor
+![pngs/img_10.png](pngs/img_10.png)<br>
+出现在这个不用慌。<br>
+![pngs/img_11.png](pngs/img_11.png)<br>
+要使用处理器，要有这个依赖。spring-boot-configuration-processor<br>
 再maven上加上依赖就好了
 ```xml
         <dependency>
@@ -731,8 +723,7 @@ public class RedisTest {
 ### Condition
 Condition是spring4.0后引入的条件配置接口，通过实现Condition接口可以完成有条件的加载相应的Bean      
 @Condition要配和Condition的实现类(ClassCondition)进行使用  
-1、创建模块springboot-condition
-
+1、创建模块springboot-condition<br>
 2、观察spring在自动创建bean过程   
 改造启动类
 ```java
@@ -751,9 +742,9 @@ public class SpringbootConditionApplication {
 
 }
 ```
-启动：获取不到对象
-![pngs/img_12.png](pngs/img_12.png)
-加上redis的依赖
+启动：获取不到对象<br>
+![pngs/img_12.png](pngs/img_12.png)<br>
+加上redis的依赖<br>
 ```xml
 <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
         <dependency>
@@ -762,9 +753,9 @@ public class SpringbootConditionApplication {
             <version>3.1.0</version>
         </dependency>
 ```
-可以看到
-![pngs/img_13.png](pngs/img_13.png)
-只要引入依赖，就可以再spring的容器中获取对象
+可以看到<br>
+![pngs/img_13.png](pngs/img_13.png)<br>
+只要引入依赖，就可以再spring的容器中获取对象<br>
 
 创建一个实体类
 ```java
@@ -820,9 +811,9 @@ public class SpringbootConditionApplication {
 ```yaml
 ipAddress: localhost
 ```
-可以利用springboot的
-![pngs/img_20.png](pngs/img_20.png)
-改造配置类UserConfig
+可以利用springboot的<br>
+![pngs/img_20.png](pngs/img_20.png)<br>
+改造配置类UserConfig<br>
 ```java
     @Bean
     @ConditionalOnProperty(name = "ipAddress", havingValue="localhost")
@@ -841,10 +832,10 @@ System.out.println(user2);
 
 这是springboot自带的，我们也可以根据源码自己写个自己的    
 
-先看一下这边有很多个注解ConditionalOnBean,ConditionalOnClass等等。点进去看看
-![pngs/img_21.png](pngs/img_21.png)
-![pngs/img_22.png](pngs/img_22.png)
-我们可以看到这些注解都是有3个注解，Target，Retention，Documented   
+先看一下这边有很多个注解ConditionalOnBean,ConditionalOnClass等等。点进去看看<br>
+![pngs/img_21.png](pngs/img_21.png)<br>
+![pngs/img_22.png](pngs/img_22.png)<br>
+我们可以看到这些注解都是有3个注解，Target，Retention，Documented<br>
 看看官网：https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.developing-auto-configuration
 * Target : 可以用在哪些地方
 * Retention : 什么时候起作用
@@ -936,10 +927,10 @@ public class UserConfig {
 > o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
 
 springboot默认了端口和tomcat。我们的springboot需要引入spring-boot-starter-web，    
-我们就看看spring-boot-starter-web的里面：
-![pngs/img_24.png](pngs/img_24.png)
-里面引了tomcat，在点进去
-![pngs/img_25.png](pngs/img_25.png)
+我们就看看spring-boot-starter-web的里面：<br>
+![pngs/img_24.png](pngs/img_24.png)<br>
+里面引了tomcat，在点进去<br>
+![pngs/img_25.png](pngs/img_25.png)<br>
 这边已经引入的tomcat。
 在看看springboot的配置
 ![pngs/img_26.png](pngs/img_26.png)
@@ -977,9 +968,9 @@ autoconfig工程里都有常用的配置类，只要工程中，引入了相关�
 
 ### Enable
 springboot虽然准备了很多常用的配置类，但是一般我们在实际开发中会引用别的类像：阿里云，七牛云等等；      
-举个例子：我们创建两个springboot工程，springboot-enable，springboot-enable-other
-![pngs/img_29.png](pngs/img_29.png)
-在springboot-enable-other中加个Person类
+举个例子：我们创建两个springboot工程，springboot-enable，springboot-enable-other<br>
+![pngs/img_29.png](pngs/img_29.png)<br>
+在springboot-enable-other中加个Person类<br>
 ```java
 package com.xcc.springbootenableother.demain;
 
@@ -1157,14 +1148,15 @@ public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
 ```
 
 ### springboot自动配置-@EnableAutoConfiguration
-主启动类这边点进@SpringBootApplication
-![pngs/img_31.png](pngs/img_31.png)
-点进@EnableAutoConfiguration，看到了Import有个AutoConfigurationImportSelector类，就是刚才Import的第三种用法，springboot这边默认用的这种方式
-![pngs/img_32.png](pngs/img_32.png)
-在进去看到AutoConfigurationImportSelector实现了DeferredImportSelector
-![pngs/img_33.png](pngs/img_33.png)
-DeferredImportSelector中在看看这边是继承了ImportSelector
-![pngs/img_34.png](pngs/img_34.png)
+
+主启动类这边点进@SpringBootApplication<br>
+![pngs/img_31.png](pngs/img_31.png)<br>
+点进@EnableAutoConfiguration，看到了Import有个AutoConfigurationImportSelector类，就是刚才Import的第三种用法，springboot这边默认用的这种方式<br>
+![pngs/img_32.png](pngs/img_32.png)<br>
+在进去看到AutoConfigurationImportSelector实现了DeferredImportSelector<br>
+![pngs/img_33.png](pngs/img_33.png)<br>
+DeferredImportSelector中在看看这边是继承了ImportSelector<br>
+![pngs/img_34.png](pngs/img_34.png)<br>
 这也确定了EnableAutoConfiguration是靠import实现了自动配置，之前自己写的一个MyImportSelector类，中是实现了selectImports这个方法，
 那么在AutoConfigurationImportSelector是实现了DeferredImportSelector，DeferredImportSelector是继承了ImportSelector，
 所以AutoConfigurationImportSelector中有个方法和我之前的MyImportSelector干了同样的事。
@@ -1206,8 +1198,8 @@ pom.xml文件
 </dependencies>
 ```
 
-redis-spring-boot-starter
-![pngs/img_39.png](pngs/img_39.png)   
+redis-spring-boot-starter<br>
+![pngs/img_39.png](pngs/img_39.png)<br>
 pom.xml文件
 ```xml
     <dependencies>
@@ -1688,16 +1680,16 @@ springboot的部署：
 * 打成jar包
 * 打成war包
 
-### jar包方式
-打开idea的maven这边，点击package
-![pngs/img_14.png](pngs/img_14.png)
-在target这边会有个jar包
-![pngs/img_15.png](pngs/img_15.png)
-不过你要是嫌名字太上可以再pom文件中起别名
-![pngs/img_16.png](pngs/img_16.png)
-还是打开idea的maven这边先clean清理一下，再package打包
-![pngs/img_17.png](pngs/img_17.png)
-target这边生成的jar包就是你再pom文件中起的名字了
+### jar包方式<br>
+打开idea的maven这边，点击package<br>
+![pngs/img_14.png](pngs/img_14.png)<br>
+在target这边会有个jar包<br>
+![pngs/img_15.png](pngs/img_15.png)<br>
+不过你要是嫌名字太上可以再pom文件中起别名<br>
+![pngs/img_16.png](pngs/img_16.png)<br>
+还是打开idea的maven这边先clean清理一下，再package打包<br>
+![pngs/img_17.png](pngs/img_17.png)<br>
+target这边生成的jar包就是你再pom文件中起的名字了<br>
 ![pngs/img_18.png](pngs/img_18.png)
 
 ### war包方式
@@ -1722,7 +1714,7 @@ public class SpringbootConditionApplication extends SpringBootServletInitializer
 
 }
 ```
-用上述的jar打包方式一样打包，在target中看到相应的war包
+用上述的jar打包方式一样打包，在target中看到相应的war包<br>
 ![pngs/img_19.png](pngs/img_19.png)
 
 ## 10、整合mybatis-plus
@@ -1870,9 +1862,9 @@ idea需要安装Mybatis-X
 
 ![pngs/img_53.png](pngs/img_53.png)
 
-![pngs/img_51.png](pngs/img_51.png)
+![pngs/img_51.png](pngs/img_51.png)<br>
 next下一步      
-![pngs/img_52.png](pngs/img_52.png)
+![pngs/img_52.png](pngs/img_52.png)<br>
 点击Finish完成，代码就生成好了。
 
 > 注意：mybatis-plus和springboot的版本有冲突，springboot不要使用3.xx的版本
@@ -2048,8 +2040,7 @@ redis官网地址：[https://redis.io/](https://redis.io/)
 
 ### 2.1、Redis的基本介绍
 
-Redis是当前比较人们的NoSQL系统之一  
-它是一个开源的、使用ANSI C语言编写的Key-value存储系统（区别于MySQL的二维表格形式存储）  
+Redis是当前比较人们的NoSQL系统之一它是一个开源的、使用ANSI C语言编写的Key-value存储系统（区别于MySQL的二维表格形式存储）  
 
 ### 2.2、Redis的应用场景
 
@@ -2074,11 +2065,11 @@ Redis是当前比较人们的NoSQL系统之一
 ### 3.1、windows环境下安装
 
 实现打开官网[https://redis.io/download/](https://redis.io/download/)
-![pngs/img_54.png](pngs/img_54.png)
+![pngs/img_54.png](pngs/img_54.png)<br>
 点击下载；下载完了在电脑上解压：
-![pngs/img_55.png](pngs/img_55.png)
-点击redis-server.exe；
-![pngs/img_56.png](pngs/img_56.png)
+![pngs/img_55.png](pngs/img_55.png)<br>
+点击redis-server.exe；<br>
+![pngs/img_56.png](pngs/img_56.png)<br>
 看到这个Windows上redis安装完成。
 
 ## 4、Redis的基本数据类型
@@ -2381,7 +2372,7 @@ ZREVRANGE key start stop
 Bitmaps不是一种数据结构，操作是基于String结构的，一个String最大可以存储512M，那么一个Bitmaps则可以设置2^32个位<br>
 Bitmaps单独提供了一套命令，所有在Redis中使用Bitmaps和使用字符串的方法不太相同。<br>
 可以把Bitmaps想象成一个以位为单位的数组，数组的每个单元只能存储0和1，数组的下标在Bitmaps中叫做偏移量offset<br>
-![pngs/img_57.png](pngs/img_57.png)
+![pngs/img_57.png](pngs/img_57.png)<br>
 BitMaps命令说明：**将每个独立用户是否访问过网站存放在Bitmaps中，将访问的用户记做1，没有访问的用户记做0，用偏移量作为用户的id**。
 
 ```
@@ -2527,7 +2518,7 @@ public class ApiTest {
 }
 ```
 
-### 4、 reids各类型数据的操作
+### 4、 redis各类型数据的操作
 
 string相关操作：
 
@@ -2559,7 +2550,7 @@ string相关操作：
         System.out.println("pv3=="+pv3);
     }
 ```
-结果：
+结果：<br>
 ![pngs/img_59.png](pngs/img_59.png)
 
 Hash相关操作：
@@ -2600,7 +2591,7 @@ Hash相关操作：
         jedis.del("goods");
     }
 ```
-结果：
+结果：<br>
 ![pngs/img_60.png](pngs/img_60.png)
 
 List相关操作：
@@ -2628,7 +2619,7 @@ List相关操作：
         jedis.close();
     }
 ```
-结果：
+结果：<br>
 ![pngs/img_61.png](pngs/img_61.png)
 
 Set相关操作：
@@ -2657,7 +2648,7 @@ Set相关操作：
         jedis.close();
     }
 ```
-结果：
+结果：<br>
 ![pngs/img_62.png](pngs/img_62.png)
 
 ## 6、redis高级
@@ -2668,13 +2659,13 @@ Set相关操作：
 > 就显得尤为重要，再redis当中，提供了两种数据持久化的方式，分别为RDB以及AOF，且Redis默认开启的数据持久化方式是
 > RDB方式。
 
-RDB：
+RDB：<br>
 ![pngs/img_63.png](pngs/img_63.png)
 
-RDB的优点：
+RDB的优点：<br>
 ![pngs/img_64.png](pngs/img_64.png)
 
-RDB的缺点：
+RDB的缺点：<br>
 ![pngs/img_65.png](pngs/img_65.png)
 
 修改redis的配置文件：<br>
@@ -2710,16 +2701,16 @@ appendonly yes
 配置AOF：<br>
 ![pngs/img_66.png](pngs/img_66.png)
 
-AOF rewrite
+AOF rewrite<br>
 ![pngs/img_67.png](pngs/img_67.png)
 
-AOF 优点
+AOF 优点<br>
 ![pngs/img_68.png](pngs/img_68.png)
 
-AOF 缺点
+AOF 缺点<br>
 ![pngs/img_69.png](pngs/img_69.png)
 
-RDB和AOF对比
+RDB和AOF对比<br>
 ![pngs/img_70.png](pngs/img_70.png)
 
 ### Redis的事务
@@ -2730,7 +2721,7 @@ RDB和AOF对比
 
 ![pngs/img_71.png](pngs/img_71.png)
 
-一个事务从开始到执行会经历以下三个阶段：<br
+一个事务从开始到执行会经历以下三个阶段：<br>
 1、开始事务<br>
 2、命令入队<br>
 3、执行事务<br>
@@ -2788,15 +2779,15 @@ get key1
 get key2
 ```
 
-为什么Redis不支持事务回滚
+为什么Redis不支持事务回滚<br>
 ![pngs/img_72.png](pngs/img_72.png)
 
 ### 数据删除与淘汰策略
 
-Redis中的数据特征：
+Redis中的数据特征：<br>
 ![pngs/img_73.png](pngs/img_73.png)
 
-数据的时效在redis的存储如下图：
+数据的时效在redis的存储如下图：<br>
 ![pngs/img_74.png](pngs/img_74.png)
 
 过期数据是一块独立的存储空间，Hash结构，field是内存地址，value是过期时间，保存了所有key的过期描述，在最终进行过期处理的时候<br>
@@ -2811,16 +2802,15 @@ Redis中的数据特征：
 2. 惰性删除<br>
 3. 定期删除<br>
 
-定时删除:
+定时删除:<br>
 ![pngs/img_75.png](pngs/img_75.png)
-![pngs/img_76.png](pngs/img_76.png)
-惰性删除:
+![pngs/img_76.png](pngs/img_76.png)<br>
+惰性删除:<br>
 ![pngs/img_77.png](pngs/img_77.png)
-![pngs/img_78.png](pngs/img_78.png)
-
-定期删除:
+![pngs/img_78.png](pngs/img_78.png)<br>
+定期删除:<br>
 ![pngs/img_79.png](pngs/img_79.png)
-![pngs/img_80.png](pngs/img_80.png)
+![pngs/img_80.png](pngs/img_80.png)<br>
 总的来说：定期删除就是周期性轮询redis库中的时效性数据，采用随机抽取的策略，利用过期数据占比的方式控制删除频度。
 > 特点1：CPU性能占用设置有峰值，检测频度可自定义设置<br>
 > 特点2：内存压力不是很大，长期占用内存的冷数据会被持续清理<br>
@@ -2920,6 +2910,144 @@ slave:<br>
 + 故障恢复：当master出现问题时，由slave提供服务，实现快速的故障恢复
 + 数据冗余：实现数据热备份，是持久化之外的一种数据冗余方式
 + 高可用基石：基于主从复制，构建哨兵模式与集群，实现Redis的高可用方案
+
+### 主从复制工作流程
+
++ 建立连接阶段（即准备阶段）
++ 数据同步阶段
++ 命令传播阶段（反复同步）
+
+![pngs/img_91.png](pngs/img_91.png)<br>
+![pngs/img_92.png](pngs/img_92.png)
+
+#### 阶段一：建立连接
+
+建立slave到master的连接，使master能够识别slave，并保存slave端口号<br>
+流程如下：<br>
++ 步骤1：设置master的地址和端口，保存master信息
++ 步骤2：建立socket连接
++ 步骤3：发送ping命令（定时器任务）
++ 步骤4：身份验证
++ 步骤5：发送slave端口信息
+
+至此，主从连接成功！<br>
+当前状态：<br>
+> slave: 保存master的地址与端口<br>
+> master: 保存slave的端口<br>
+> 总体：之间创建了连接的socket<br>
+
+![pngs/img_93.png](pngs/img_93.png)
+
+#### 阶段二：数据同步
+
+在slave初次连接master后，复制master中的所有数据到slave<br>
+将slave的数据库状态更新成master当前的数据库状态<br>
+
+同步过程如下：<br>
++ 步骤1：请求同步数据
++ 步骤2：创建RDB同步数据
++ 步骤3：恢复RDB同步数据
++ 步骤4：请求部分同步数据
++ 步骤5：恢复部分同步数据
+
+至此，数据同步工作完成！<br>
+当前状态：<br>
+slave：具有master端全部数据，包含RDB过程接收的数据<br>
+master：保存slave当前数据同步的位置<br>
+总体：之间完成了数据克隆
+
+![pngs/img_94.png](pngs/img_94.png)
+
+**数同步阶段master说明**
+
+1：如果master数据量巨大，数据同步阶段应避开流量高峰期，避免造成master阻塞，影响业务正常执行<br>
+2：复制缓冲区大小设置不合理，会导致数据溢出。如进行全量复制周期太长，进行部分复制时发现数据已经存在丢失的情况，
+必须进行第二次全量复制，致使slave陷入死循环状态。<br>
+> repl-backlog-size ?mb
+
+3：master单机内存占用主机内存的比例不应过大，建议使用50%-70%的内存，留下30%-50%的内存用于执行bgsave命令和创建复制缓冲区
+
+**数据同步阶段slave说明**<br>
+1：为避免slave进行全量复制、部分复制时服务器响应阻塞或数据不同步，建议关闭此期间的对外服务<br>
+> slave-serve-stale-data yes|no
+
+2：数据同步阶段，master发送给slave信息可以理解master是slave的一个客户端，主动向slave发送命令<br>
+3：多个slave同时对master请求数据同步，master发送的RDB文件增多，会对宽带造成巨大冲击，如果
+master宽带不足，因此数据同步需要根据业务需求，适量错峰<br>
+4：slave过多时，建议调整拓扑结构，由一主多从结构变为树状结构，中间的节点既是master，也是slave。
+注意使用树状结构时，由于层级深度，导致深度越高的slave与最顶层master间数据同步延迟较大，数据一致性变差，应谨慎选择<br>
+![pngs/img_95.png](pngs/img_95.png)
+
+#### 阶段三：命令传播
+
++ 当master数据库状态被修改后，导致主从服务器数据库志昂太不一致，此时需要让主从数据同步到一致的状态，同步的动作称为命令传播
++ master将接收到的数据变更命令发送到slave，slave接收命令后执行命令
+
+**命令传播阶段的部分复制**<br>
++ 命令传播阶段出现了断网现象：
++ 网络闪断闪连：忽略
++ 短时间网络中断：部分复制
++ 长时间网络中断：全量复制
+
+部分复制的三个核心要素：<br>
++ 1.服务器的运行id（run id）
++ 2.主服务器的复制积压缓冲区
++ 3.主从服务器的复制偏移量
+
+**服务器运行ID（run id）**<br>
+![pngs/img_96.png](pngs/img_96.png)
+
+**复制缓冲区**<br>
+![pngs/img_97.png](pngs/img_97.png)<br>
+![pngs/img_98.png](pngs/img_98.png)
+
+复制缓冲区内部工作原理：<br>
+组成<br>
+偏移量<br>
+> 概念：一个数字，描述复制缓冲区中的指令字节位置<br>
+> 分类：<br>
+> master复制偏移量：记录发送给所有slave的指令字节对应的位置（多个）<br>
+> slave复制偏移量：记录slave接收master发送过来的指令字节对应的位置（一个）<br>
+> 作用：同步信息，比对master与slave的差异，当slave断线后，恢复数据使用<br>
+> 数据来源：<br>
+> master端：发送一次记录一次<br>
+> slave端：接收一次记录一次<br>
+
+字节值<br>
+工作原理<br>
++ 通过offset区分不同的slave当前数据传播的差异
++ master记录已发送的信息对应的offset
++ slave记录已接收的信息对应的offset
+
+**主要流程**<br>
+![pngs/img_99.png](pngs/img_99.png)
+
+### 心跳机制
+
+**心跳机制**：进入命令传播阶段候，master与slave间需要进行信息交换，使用心跳机制进行维护，实现双方连接保持在线<br>
+master心跳：<br>
++ 内部指令：PING
++ 周期：由repl-ping-slave-period决定，默认10秒
++ 作用：判断slave是否在线
++ 查询：INFO replication获取slave最后一次连接时间间隔，lag项维持在0或1视为正常
+
+slave心跳任务：<br>
++ 内部指令：REPLCONF ACK{offset}
++ 周期：1秒
++ 作用1：汇报slave自己的复制偏移量，获取最新的数据变更指令
++ 作用2：判断master是否在线
+
+心跳阶段注意事项：<br>
++ 当salve多数掉线，或延迟过高时，master为保障数据稳定性，将拒绝所有信息同步
+> min-slaves-to-write 2<br>
+> min-slaves-max-lag 8
+
+salve数量少于2个，或者所有slave的延迟都大于等于8秒时，强制关闭master写功能，停止数据同步<br>
++ slave数量由slave发送REPLCONF ACK命令做确认
++ slave延迟由slave发送REPLCONF ACK命令做确认
+
+完成的主从复制流程:<br>
+![pngs/img_100.png](pngs/img_100.png)
 
 
 
